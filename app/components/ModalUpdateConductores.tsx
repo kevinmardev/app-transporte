@@ -1,12 +1,8 @@
 import { Button, Form, Input, Modal, Switch } from "antd";
-import React, { useEffect } from "react";
-import {
-  IFormCamion,
-  IModalConductores,
-  IsReload,
-} from "../lib/interfaces/IConductores";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
+import { useEffect } from "react";
 import { db } from "../lib/firebase";
+import { IFormCamion, IModalConductores } from "../lib/interfaces/IConductores";
 
 export default function ModalUpdateCoductores({
   setIsModalOpen,

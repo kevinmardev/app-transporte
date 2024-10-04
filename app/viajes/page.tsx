@@ -1,17 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import TablaRutas from "../components/rutas/TablaRutas";
-import ModalRuta from "../components/rutas/ModalRuta";
+import TablaProgramacionViajes from "../components/ProgramacionViajes/TablaProgramacionViajes";
+import ModalViajes from "../components/ProgramacionViajes/ModalViajes";
 import { Button, Col, Row, Typography } from "antd";
 const { Title } = Typography;
 
-export default function pageRutas() {
+export default function pageViajes() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReload, setIsRelaod] = useState(false);
+
   const showModal = () => {
     setIsModalOpen(true);
   };
-
   return (
     <>
       <Row
@@ -20,16 +20,16 @@ export default function pageRutas() {
         style={{ marginBottom: "20px" }}
       >
         <Col>
-          <Title level={2}>Rutas</Title>
+          <Title level={2}>Viajes</Title>
         </Col>
         <Col>
           <Button onClick={showModal} type="primary">
-            Nueva Ruta
+            Asignar Viajes
           </Button>
         </Col>
       </Row>
-      <TablaRutas isReload={isReload} setIsRelaod={setIsRelaod} />
-      <ModalRuta
+      <TablaProgramacionViajes isReload={isReload} setIsRelaod={setIsRelaod} />
+      <ModalViajes
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         setIsRelaod={setIsRelaod}
