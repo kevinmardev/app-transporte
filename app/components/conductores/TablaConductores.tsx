@@ -13,8 +13,8 @@ import {
   IFormCamion,
   IModalConductores,
   IsReload,
-} from "../lib/interfaces/IConductores";
-import { db } from "../lib/firebase";
+} from "../../lib/interfaces/IConductores";
+import { db } from "../../lib/firebase";
 import ModalUpdateCoductores from "./ModalUpdateConductores";
 
 export default function TablaConductores({ isReload, setIsRelaod }: IsReload) {

@@ -1,8 +1,11 @@
 import { Button, Form, Input, Modal, Switch } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
 import { useEffect } from "react";
-import { db } from "../lib/firebase";
-import { IFormCamion, IModalConductores } from "../lib/interfaces/IConductores";
+import { db } from "../../lib/firebase";
+import {
+  IFormCamion,
+  IModalConductores,
+} from "../../lib/interfaces/IConductores";
 
 export default function ModalUpdateCoductores({
   setIsModalOpen,

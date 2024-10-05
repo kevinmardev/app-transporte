@@ -4,9 +4,9 @@ import {
   IFormCamion,
   IModalConductores,
   IsReload,
-} from "../lib/interfaces/IConductores";
+} from "../../lib/interfaces/IConductores";
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../lib/firebase";
+import { db } from "../../lib/firebase";
 
 export default function ModalCoductores({
   setIsModalOpen,
