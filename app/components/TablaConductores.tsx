@@ -144,6 +144,7 @@ export default function TablaConductores({ isReload, setIsRelaod }: IsReload) {
   return (
     <>
       <Table
+        scroll={{ x: 500 }} // Permite el desplazamiento horizontal
         columns={columns}
         dataSource={conductores.map((conductor) => ({
           ...conductor,

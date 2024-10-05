@@ -1,19 +1,42 @@
 // app/layout.tsx
 "use client";
-import React from "react";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
+import Link from "next/link";
+import { MenuProps } from "rc-menu";
+import React, { useEffect, useState } from "react";
 
 const { Header, Content, Footer } = Layout;
-
-const items = new Array(5).fill(null).map((_, index) => ({
-  key: index + 1,
-  label: `nav ${index + 1}`,
-}));
 
 export default function MiLayout({ children }: { children: React.ReactNode }) {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const initialPage = localStorage.getItem("selectedPage") || "home";
+
+  const [current, setCurrent] = useState(initialPage);
+
+  const items = [
+    { key: "1", label: <Link href="/">Home</Link> },
+    { key: "2", label: <Link href="/conductores">Conductores</Link> },
+    { key: "3", label: <Link href="/rutas">Rutas</Link> },
+    { key: "4", label: <Link href="/vehiculos">Vehículos</Link> },
+    { key: "5", label: <Link href="/viajes">Viajes</Link> },
+  ];
+
+  // Definir el tipo del evento onClick
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
+    console.log("Item clicado: ", e.key); // e.key contiene la clave del ítem seleccionado
+    setCurrent(e.key);
+    localStorage.setItem("selectedPage", e.key); // Guardar la página seleccionada en localStorage
+  };
+
+  useEffect(() => {
+    const savedPage = localStorage.getItem("selectedPage");
+    if (savedPage) {
+      setCurrent(savedPage);
+    }
+  }, []);
 
   return (
     <Layout>
@@ -22,8 +45,9 @@ export default function MiLayout({ children }: { children: React.ReactNode }) {
         <Menu
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["2"]}
+          selectedKeys={[current]}
           items={items}
+          onClick={handleMenuClick}
           style={{ flex: 1, minWidth: 0 }}
         />
       </Header>
