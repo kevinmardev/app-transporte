@@ -18,7 +18,7 @@ export default function MiLayout({ children }: { children: React.ReactNode }) {
 
   const items = [
     { key: "1", label: <Link href="/">Home</Link> },
-    { key: "2", label: <Link href="/conductores">Conductores</Link> },
+    { key: "2", label: <Link href="/conductor">Conductores</Link> },
     { key: "3", label: <Link href="/rutas">Rutas</Link> },
     { key: "4", label: <Link href="/vehiculos">Vehículos</Link> },
     { key: "5", label: <Link href="/viajes">Viajes</Link> },

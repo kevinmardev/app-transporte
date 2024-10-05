@@ -1,3 +1,4 @@
+"use client";
 import { Button, Col, Row, Typography } from "antd";
 import React, { useState } from "react";
 import ModalCoductores from "../components/conductores/ModalCoductores";
