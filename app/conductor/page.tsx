@@ -13,7 +13,6 @@ export default function pageConductores() {
   };
   return (
     <div>
-      <h1>Bienvenido </h1>
       <br />
       <Row
         justify="space-between"

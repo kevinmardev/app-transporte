@@ -1,7 +1,20 @@
-import { db } from "@/app/lib/firebase";
+import { db, storage } from "@/app/lib/firebase";
 import { IModalVehiculo, IVehiculo } from "@/app/lib/interfaces/IVehiculo";
-import { Button, Form, Input, Modal, Switch } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Select,
+  Switch,
+  Upload,
+  UploadFile,
+} from "antd";
 import { addDoc, collection } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useState } from "react";
 
 export default function ModalVehiculos({
   setIsModalOpen,
@@ -9,16 +22,47 @@ export default function ModalVehiculos({
   setIsRelaod,
 }: IModalVehiculo) {
   const [form] = Form.useForm();
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  const handleChange = ({ fileList }: any) => setFileList(fileList);
+
+  const subirFoto = async (file: File) => {
+    const storageRef = ref(storage, `camiones/${file.name}`);
+    try {
+      const snapshot = await uploadBytes(storageRef, file); //se sube la imagen a firestore
+      const url = await getDownloadURL(snapshot.ref); // obtiene la URL de la imagen subida
+      return url; // Retorna la URL para guardarla en Firestore
+    } catch (error) {
+      console.error("Error al subir la foto:", error);
+    }
+  };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
   const onFinish = async (values: IVehiculo) => {
-    console.log("Finish ", values);
-    await agregarDato(values);
-    setIsModalOpen(false);
-    setIsRelaod(true);
+    if (fileList.length === 0) {
+      message.error("Por favor, selecciona una imagen para el vehículo.");
+      return;
+    }
+
+    try {
+      // Subir la foto y obtener la URL
+      const urlFoto = await subirFoto(fileList[0].originFileObj as File); // Usa el archivo original para subir
+      if (urlFoto) {
+        // Agregar el vehículo a Firestore junto con la URL de la foto
+        await agregarDato({ ...values, fotoVehiculo: urlFoto });
+      }
+
+      setIsModalOpen(false);
+      setIsRelaod(true);
+      form.resetFields();
+      setFileList([]); // Limpia la foto seleccionada
+      message.success("Vehículo agregado correctamente");
+    } catch (error) {
+      message.error("Error al agregar el vehículo");
+    }
   };
 
   async function agregarDato(vehiculo: IVehiculo) {
@@ -105,14 +149,22 @@ export default function ModalVehiculos({
             <Input placeholder="ingrese capacidad" />
           </Form.Item>
           <Form.Item
-            label="Tipo de Vehiculo"
+            label="Tipo de Vehículo"
             name="tipoVehiculo"
             rules={[
-              { required: true, message: "El tipo de Vehiculo es obligatorio" },
+              {
+                required: true,
+                message: "El tipo de Vehículo es obligatorio",
+              },
             ]}
           >
-            <Input placeholder="ingrese tipo de Vehiculo" />
+            <Select placeholder="Seleccione el tipo de vehículo">
+              <Select.Option value="sedan">Sedán</Select.Option>
+              <Select.Option value="microbus">Microbús</Select.Option>
+              <Select.Option value="coaster">Coaster</Select.Option>
+            </Select>
           </Form.Item>
+
           <Form.Item
             label="estado"
             name="estado"
@@ -121,21 +173,22 @@ export default function ModalVehiculos({
           >
             <Switch />
           </Form.Item>
+
           <Form.Item
             label="fotoVehiculo"
             name="fotoVehiculo"
             rules={[
               { required: true, message: "El fotoVehiculo es obligatorio" },
-              {
-                pattern: /^[a-zA-Z\s]+$/,
-                message: "Solo se permiten letras y espacios",
-              },
             ]}
-            validateTrigger="onBlur"
           >
-            <Input placeholder="Ingrese su fotoVehiculo" />
+            <Upload
+              fileList={fileList}
+              beforeUpload={() => false} // Evita la carga automática
+              onChange={handleChange}
+            >
+              <Button icon={<UploadOutlined />}>Seleccionar Imagen</Button>
+            </Upload>
           </Form.Item>
-
           <div
             style={{
               display: "flex",

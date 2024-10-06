@@ -71,11 +71,11 @@ export default function SubidaImagen() {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <label>Imagen</label>
-        <input type="file" name="file" onChange={handleFileChange} />
-        <button type="submit">Subir imagen</button>
-      </form>
+      <label>Imagen</label>
+      <input type="file" name="file" onChange={handleFileChange} />
+      <button type="submit" onClick={handleSubmit}>
+        Subir imagen
+      </button>
     </>
   );
 }

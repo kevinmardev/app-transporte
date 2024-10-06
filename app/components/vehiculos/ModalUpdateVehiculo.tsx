@@ -1,8 +1,9 @@
 import { db } from "@/app/lib/firebase";
+import { UploadOutlined } from "@ant-design/icons";
 import { IModalVehiculo, IVehiculo } from "@/app/lib/interfaces/IVehiculo";
-import { Button, Form, Input, Modal, Switch } from "antd";
+import { Button, Form, Input, Modal, Select, Switch, Upload } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function ModalUpdateVehiculo({
   setIsModalOpen,
@@ -11,6 +12,9 @@ export default function ModalUpdateVehiculo({
   vehiculo,
 }: IModalVehiculo) {
   const [form] = Form.useForm();
+  const [fileList, setFileList] = useState<any[]>([]);
+
+  const handleChange = ({ fileList }: any) => setFileList(fileList);
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -20,9 +24,7 @@ export default function ModalUpdateVehiculo({
     console.log("Finish ", values);
     if (vehiculo) {
       try {
-        // Crear referencia al documento del usuario
         const usuarioRef = doc(db, "Camiones", vehiculo.ID);
-        // Actualizar el documento con los nuevos valores
         await updateDoc(usuarioRef, {
           marca: values.marca,
           capacidad: values.capacidad,
@@ -45,12 +47,20 @@ export default function ModalUpdateVehiculo({
   useEffect(() => {
     if (isModalOpen && vehiculo) {
       form.setFieldsValue(vehiculo); // Establecer valores en el formulario
-      //   form.setFieldsValue({ nombresa: conductor.nombre });
+
+      // Precargar la imagen existente en fileList
+      if (vehiculo.fotoVehiculo) {
+        setFileList([
+          {
+            url: vehiculo.fotoVehiculo, // URL de la imagen existente
+          },
+        ]);
+      }
     }
   }, [isModalOpen, vehiculo, form]);
 
   return (
-    <Modal title="Nuevo Vehiculo" open={isModalOpen} footer={null}>
+    <Modal title="Actualizar Vehículo" open={isModalOpen} footer={null}>
       <Form form={form} name="control-ref" onFinish={onFinish}>
         <Form.Item
           label="Marca"
@@ -63,65 +73,65 @@ export default function ModalUpdateVehiculo({
             },
           ]}
         >
-          <Input placeholder="ingrese marca" />
+          <Input placeholder="Ingrese marca" />
         </Form.Item>
         <Form.Item
-          label="modelo"
+          label="Modelo"
           name="modelo"
-          rules={[{ required: true, message: "La modelo es obligatorio" }]}
+          rules={[{ required: true, message: "El modelo es obligatorio" }]}
         >
-          <Input placeholder="ingrese modelo" />
+          <Input placeholder="Ingrese modelo" />
         </Form.Item>
         <Form.Item
-          label="year"
+          label="Año"
           name="year"
           rules={[
             { required: true, message: "El año es obligatorio" },
             {
-              pattern: /^(19|20)\d{2}$/, // Acepta años entre 1900 y 2099
+              pattern: /^(19|20)\d{2}$/,
               message:
                 "El año debe estar en el formato de 4 dígitos (Ej: 2023)",
             },
           ]}
-          validateTrigger="onBlur" // Valida al perder el foco
+          validateTrigger="onBlur"
         >
           <Input placeholder="Ingrese año (Ej: 2023)" />
         </Form.Item>
-
         <Form.Item
-          label="placa"
+          label="Placa"
           name="placa"
-          rules={[{ required: true, message: "La placa es obligatorio" }]}
+          rules={[{ required: true, message: "La placa es obligatoria" }]}
         >
-          <Input placeholder="ingrese placa" />
+          <Input placeholder="Ingrese placa" />
         </Form.Item>
         <Form.Item
-          label="capacidad"
+          label="Capacidad"
           name="capacidad"
           rules={[
-            {
-              required: true,
-              message: "La capacidad es obligatorio",
-            },
+            { required: true, message: "La capacidad es obligatoria" },
             {
               pattern: /^[0-9]+$/,
               message: "Solo se permiten números",
             },
           ]}
         >
-          <Input placeholder="ingrese capacidad" />
+          <Input placeholder="Ingrese capacidad" />
         </Form.Item>
         <Form.Item
-          label="Tipo de Vehiculo"
+          label="Tipo de Vehículo"
           name="tipoVehiculo"
           rules={[
-            { required: true, message: "El tipo de Vehiculo es obligatorio" },
+            { required: true, message: "El tipo de vehículo es obligatorio" },
           ]}
         >
-          <Input placeholder="ingrese tipo de Vehiculo" />
+          <Select placeholder="Seleccione el tipo de vehículo">
+            <Select.Option value="sedan">Sedán</Select.Option>
+            <Select.Option value="microbus">Microbús</Select.Option>
+            <Select.Option value="coaster">Coaster</Select.Option>
+          </Select>
         </Form.Item>
         <Form.Item
-          label="estado"
+          label="Estado"
           name="estado"
           valuePropName="checked"
           rules={[{ required: true, message: "El estado es requerido" }]}
@@ -129,18 +139,20 @@ export default function ModalUpdateVehiculo({
           <Switch />
         </Form.Item>
         <Form.Item
-          label="fotoVehiculo"
+          label="Foto del Vehículo"
           name="fotoVehiculo"
           rules={[
-            { required: true, message: "El fotoVehiculo es obligatorio" },
-            {
-              pattern: /^[a-zA-Z\s]+$/,
-              message: "Solo se permiten letras y espacios",
-            },
+            { required: true, message: "La foto del vehículo es obligatoria" },
           ]}
-          validateTrigger="onBlur"
         >
-          <Input placeholder="Ingrese su fotoVehiculo" />
+          <Upload
+            fileList={fileList}
+            beforeUpload={() => false}
+            onChange={handleChange}
+            listType="picture"
+          >
+            <Button icon={<UploadOutlined />}>Seleccionar Imagen</Button>
+          </Upload>
         </Form.Item>
 
         <div
@@ -151,7 +163,6 @@ export default function ModalUpdateVehiculo({
           }}
         >
           <Button onClick={handleCancel}>Cancelar</Button>
-
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Guardar

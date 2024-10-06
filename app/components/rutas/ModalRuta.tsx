@@ -37,8 +37,8 @@ export default function ModalRuta({
           tipoViaje: ruta.tipoViaje,
           origenRuta: ruta.origenRuta,
           destinoRuta: ruta.destinoRuta,
-          idConductor: ruta.idConductor,
-          idVehiculo: ruta.idVehiculo,
+          // idConductor: ruta.idConductor,
+          // idVehiculo: ruta.idVehiculo,
           estado: ruta.estado,
         });
         console.log("Documento agregado con ID: ", docRef.id);
@@ -142,7 +142,7 @@ export default function ModalRuta({
             <Input placeholder="Ingrese el destino de la ruta" />
           </Form.Item>
 
-          <Form.Item label="Selecciona un Conductor" name="idConductor">
+          {/* <Form.Item label="Selecciona un Conductor" name="idConductor">
             <Select placeholder="Selecciona un conductor">
               {conductores.map((conductor) => (
                 <Option key={conductor.id} value={conductor.id}>
@@ -160,7 +160,7 @@ export default function ModalRuta({
                 </Option>
               ))}
             </Select>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item
             label="Estado"

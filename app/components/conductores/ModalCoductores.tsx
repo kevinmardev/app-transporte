@@ -24,6 +24,7 @@ export default function ModalCoductores({
     await agregarDato(values);
     setIsModalOpen(false);
     setIsRelaod(true);
+    form.resetFields();
   };
 
   async function agregarDato(conductor: IFormCamion) {

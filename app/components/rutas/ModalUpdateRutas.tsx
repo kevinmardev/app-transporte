@@ -52,8 +52,8 @@ export default function ModalUpdateRutas({
           tipoViaje: values.tipoViaje,
           origenRuta: values.origenRuta,
           destinoRuta: values.destinoRuta,
-          idConductor: values.idConductor,
-          idVehiculo: values.idVehiculo,
+          // idConductor: values.idConductor,
+          // idVehiculo: values.idVehiculo,
           estado: values.estado,
         });
         console.log("Usuario actualizado correctamente.");
@@ -125,7 +125,7 @@ export default function ModalUpdateRutas({
             <Input placeholder="Ingrese el destino de la ruta" />
           </Form.Item>
 
-          <Form.Item label="Selecciona un Conductor" name="idConductor">
+          {/* <Form.Item label="Selecciona un Conductor" name="idConductor">
             <Select placeholder="Selecciona un conductor">
               {conductores.map((conductor) => (
                 <Option key={conductor.id} value={conductor.id}>
@@ -143,7 +143,7 @@ export default function ModalUpdateRutas({
                 </Option>
               ))}
             </Select>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item
             label="Estado"

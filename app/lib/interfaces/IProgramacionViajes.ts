@@ -15,4 +15,5 @@ export interface IViaje {
     isModalOpen: boolean;
     setIsModalOpen: (estado: boolean) => void;
     setIsRelaod:(estado: boolean) => void;
+    
   }
