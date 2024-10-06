@@ -1,7 +1,7 @@
 import { db } from "@/app/lib/firebase";
 import { IModalViaje, IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
 import { IVehiculo } from "@/app/lib/interfaces/IVehiculo";
-import { Button, Form, Input, Modal, Select, Switch } from "antd";
+import { Button, DatePicker, Form, Input, Modal, Select, Switch } from "antd";
 import { Option } from "antd/es/mentions";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -20,8 +20,10 @@ export default function ModalViajes({
     setIsModalOpen(false);
   };
 
-  const onFinish = async (values: IViaje) => {
-    console.log("Finish ", values);
+  const onFinish = async (values: any) => {
+    console.log("Finish ", values.fechaLlegada.format("YYYY-MM-DD HH:mm:ss"));
+    values.fechaLlegada = values.fechaLlegada.format("YYYY-MM-DD HH:mm:ss");
+    values.fechaRecogida = values.fechaRecogida.format("YYYY-MM-DD HH:mm:ss");
     await agregarDato(values);
     setIsModalOpen(false);
     setIsRelaod(true);
@@ -129,6 +131,18 @@ export default function ModalViajes({
             <Input placeholder="Ingrese nombre" />
           </Form.Item>
           <Form.Item
+            label="fecha de Recogida"
+            name="fechaRecogida"
+            rules={[
+              {
+                required: true,
+                message: "Por favor selecciona una fecha y hora",
+              },
+            ]}
+          >
+            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+          </Form.Item>
+          {/* <Form.Item
             label="fechaRecogida"
             name="fechaRecogida"
             rules={[
@@ -136,8 +150,8 @@ export default function ModalViajes({
             ]}
           >
             <Input placeholder="Ingrese fechaRecogida" />
-          </Form.Item>
-          <Form.Item
+          </Form.Item> */}
+          {/* <Form.Item
             label="fechaLlegada"
             name="fechaLlegada"
             rules={[
@@ -149,6 +163,19 @@ export default function ModalViajes({
             validateTrigger="onBlur" // Valida al perder el foco
           >
             <Input placeholder="Ingrese la fechaLlegada" />
+          </Form.Item> */}
+
+          <Form.Item
+            label="fecha de Llegada"
+            name="fechaLlegada"
+            rules={[
+              {
+                required: true,
+                message: "Por favor selecciona una fecha y hora",
+              },
+            ]}
+          >
+            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
           </Form.Item>
 
           <Form.Item label="Selecciona un Conductor" name="idConductor">

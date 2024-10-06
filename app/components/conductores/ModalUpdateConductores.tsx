@@ -1,7 +1,8 @@
-import { Button, Form, Input, Modal, Switch } from "antd";
+import { Button, Form, Input, Modal, Switch, Upload, UploadFile } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { db } from "../../lib/firebase";
+import { UploadOutlined } from "@ant-design/icons";
 import {
   IFormCamion,
   IModalConductores,
@@ -14,6 +15,9 @@ export default function ModalUpdateCoductores({
   conductor,
 }: IModalConductores) {
   const [form] = Form.useForm();
+
+  const [fileList, setFileList] = useState<any[]>([]);
+  const handleChange = ({ fileList }: any) => setFileList(fileList);
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -50,6 +54,13 @@ export default function ModalUpdateCoductores({
     if (isModalOpen && conductor) {
       form.setFieldsValue(conductor); // Establecer valores en el formulario
       //   form.setFieldsValue({ nombresa: conductor.nombre });
+      if (conductor.fotoDeConductor) {
+        setFileList([
+          {
+            url: conductor.fotoDeConductor, // URL de la imagen existente
+          },
+        ]);
+      }
     }
   }, [isModalOpen, conductor, form]);
 
@@ -108,18 +119,7 @@ export default function ModalUpdateCoductores({
           >
             <Input placeholder="ingrese edad" />
           </Form.Item>
-          <Form.Item
-            label="fotoDeConductor"
-            name="fotoDeConductor"
-            rules={[
-              {
-                required: true,
-                message: "La fotoDeConductor es obligatorio",
-              },
-            ]}
-          >
-            <Input placeholder="ingrese fotoDeConductor" />
-          </Form.Item>
+
           <Form.Item
             label="licencia"
             name="licencia"
@@ -163,6 +163,22 @@ export default function ModalUpdateCoductores({
             validateTrigger="onBlur"
           >
             <Input placeholder="Ingrese su correo" />
+          </Form.Item>
+          <Form.Item
+            label="fotoDeConductor"
+            name="fotoDeConductor"
+            rules={[
+              { required: true, message: "El fotoDeConductor es obligatorio" },
+            ]}
+          >
+            <Upload
+              fileList={fileList}
+              beforeUpload={() => false} // Evita la carga automática
+              onChange={handleChange}
+              listType="picture"
+            >
+              <Button icon={<UploadOutlined />}>Seleccionar Imagen</Button>
+            </Upload>
           </Form.Item>
 
           <div

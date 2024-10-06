@@ -1,6 +1,6 @@
 import { db } from "@/app/lib/firebase";
 import { IModalViaje, IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
-import { Button, Form, Input, Modal, Select, Switch } from "antd";
+import { Button, DatePicker, Form, Input, Modal, Select, Switch } from "antd";
 import { Option } from "antd/es/mentions";
 
 import {
@@ -11,6 +11,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import moment from "moment";
 import { useEffect, useState } from "react";
 
 export default function ModalUpdateViaje({
@@ -119,7 +120,13 @@ export default function ModalUpdateViaje({
   useEffect(() => {
     if (isModalOpen && viaje) {
       // Establecer valores en el formulario
+      const fecha = moment(viaje.fechaLlegada, "YYYY-MM-DD HH:mm:ss");
       form.setFieldsValue(viaje);
+      form.setFieldValue(
+        "fechaLlegada",
+        moment(viaje.fechaLlegada, "YYYY-MM-DD HH:mm:ss")
+      );
+      console.log(fecha.format("YYYY-MM-DD HH:mm:ss"));
     }
   }, [isModalOpen, viaje, form]);
 
@@ -150,19 +157,17 @@ export default function ModalUpdateViaje({
             <Input placeholder="Ingrese fechaRecogida" />
           </Form.Item>
           <Form.Item
-            label="fechaLlegada"
+            label="fecha de Llegada"
             name="fechaLlegada"
             rules={[
               {
                 required: true,
-                message: "la fechaLlegada es obligatorio",
+                message: "Por favor selecciona una fecha y hora",
               },
             ]}
-            validateTrigger="onBlur" // Valida al perder el foco
           >
-            <Input placeholder="Ingrese la fechaLlegada" />
+            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
           </Form.Item>
-
           <Form.Item label="Selecciona un Conductor" name="idConductor">
             <Select placeholder="Selecciona un conductor">
               {conductores.map((conductor) => (

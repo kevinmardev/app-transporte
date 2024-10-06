@@ -7,6 +7,8 @@ export interface IViaje {
     idVehiculo: string;       // ID del vehículo
     idRuta: string;           // ID de la ruta
     estado: boolean;          // Estado del viaje (activo o inactivo)
+
+
   }
   
   

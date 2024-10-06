@@ -135,6 +135,7 @@ export default function TablaRutas({ isReload, setIsRelaod }: IsReload) {
   return (
     <>
       <Table
+        scroll={{ x: 500 }}
         columns={columns}
         dataSource={rutas.map((ruta) => ({
           ...ruta,

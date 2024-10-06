@@ -1,9 +1,9 @@
+import { useEffect, useState } from "react";
 import { db } from "@/app/lib/firebase";
-import { IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
+import { IModalViaje, IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
 import { message, Table, Tag } from "antd";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import ModalUpdateViaje from "./ModalUpdateViaje";
 import { IsReload } from "@/app/lib/interfaces/IConductores";
 
@@ -12,45 +12,144 @@ export default function TablaProgramacionViajes({
   setIsRelaod,
 }: IsReload) {
   const [viajes, setViajes] = useState<IViaje[]>([]);
-  const [viaje, setViaje] = useState<IViaje>();
+  const [conductores, setConductores] = useState<any[]>([]);
+  const [vehiculos, setVehiculos] = useState<any[]>([]);
   const [isShow, setIsShow] = useState(false);
+  const [viaje, setViaje] = useState<IViaje>();
 
-  const showModal = () => {
-    setIsShow(true);
+  // Obtener todos los conductores al cargar el componente
+  const obtenerConductores = async () => {
+    try {
+      const conductoresSnapshot = await getDocs(collection(db, "Conductores"));
+      const listaConductores = conductoresSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        nombre: doc.data().nombre,
+      }));
+      setConductores(listaConductores); // Guardar todos los conductores en el estado
+    } catch (error) {
+      console.error("Error al obtener los conductores:", error);
+    }
   };
+
+  const obtenerVehiculos = async () => {
+    try {
+      const vehiculosSnapshot = await getDocs(collection(db, "Camiones"));
+      const listaVehiculos = vehiculosSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        tipoVehiculo: doc.data().tipoVehiculo,
+      }));
+      setVehiculos(listaVehiculos);
+    } catch (error) {
+      console.log("error al cargar", error);
+    }
+  };
+
+  // Obtener todos los viajes
+  const obtenerDatos = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "ProgramacionViajes"));
+      const listaViaje: IViaje[] = [];
+
+      querySnapshot.forEach((doc) => {
+        const viajeData = doc.data();
+        listaViaje.push({
+          ID: doc.id,
+          idConductor: viajeData.idConductor,
+          fechaLlegada: viajeData.fechaLlegada,
+          fechaRecogida: viajeData.fechaRecogida,
+          idRuta: viajeData.idRuta,
+          idVehiculo: viajeData.idVehiculo,
+          nombreViaje: viajeData.nombreViaje,
+          estado: viajeData.estado,
+        });
+      });
+
+      setViajes(listaViaje); // Actualiza el estado con los datos obtenidos
+    } catch (error) {
+      console.error("Error al obtener los datos:", error);
+    }
+  };
+
+  // Encontrar el nombre del conductor basado en el idConductor
+  const encontrarConductor = (idConductor: string) => {
+    const conductor = conductores.find(
+      (conductor) => conductor.id === idConductor
+    );
+    return conductor ? conductor.nombre : "Conductor no encontrado";
+  };
+
+  const encontrarVehiculo = (idVehiculo: string) => {
+    const vehiculo = vehiculos.find((vehiculo) => vehiculo.id === idVehiculo);
+    return vehiculo ? vehiculo.tipoVehiculo : "vehiiculo no encontrado";
+  };
+
+  // Eliminar un viaje
+  const deleteViaje = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "ProgramacionViajes", id));
+      setViajes(viajes.filter((viaje) => viaje.ID !== id));
+      message.success(`Conductor eliminado con éxito`);
+    } catch (error) {
+      console.error("Error al eliminar el usuario:", error);
+    }
+  };
+
+  // Abrir modal para actualizar el viaje
+  const updateViaje = async (viaje: IViaje) => {
+    setIsShow(true);
+    setViaje(viaje);
+  };
+
+  useEffect(() => {
+    obtenerVehiculos();
+    obtenerConductores(); // Obtener conductores al cargar el componente
+    obtenerDatos(); // Obtener viajes al cargar el componente
+  }, []);
+
+  useEffect(() => {
+    if (isReload) {
+      obtenerDatos();
+      setIsRelaod(false);
+      message.success(`Datos actualizados con éxito`);
+    }
+  }, [isReload]);
+
+  // Definir las columnas de la tabla
   const columns = [
     {
-      title: "nombre del Viaje",
+      title: "Nombre del Viaje",
       dataIndex: "nombreViaje",
       key: "nombreViaje",
     },
     {
-      title: "Ruta asignada",
+      title: "Nombre de la Ruta",
       dataIndex: "idRuta",
       key: "idRuta",
     },
     {
-      title: "fecha de Recogida",
+      title: "Fecha de Recogida",
       dataIndex: "fechaRecogida",
       key: "fechaRecogida",
     },
     {
-      title: "fechaLlegada",
+      title: "Fecha de Llegada",
       dataIndex: "fechaLlegada",
       key: "fechaLlegada",
     },
     {
-      title: "idConductor",
+      title: "Conductor",
       dataIndex: "idConductor",
       key: "idConductor",
+      render: (idConductor: string) => encontrarConductor(idConductor), // Usar la función para encontrar el nombre del conductor
     },
     {
-      title: "idVehiculo",
+      title: "Vehículo",
       dataIndex: "idVehiculo",
       key: "idVehiculo",
+      render: (idVehiculo: string) => encontrarVehiculo(idVehiculo),
     },
     {
-      title: "estado",
+      title: "Estado",
       dataIndex: "estado",
       key: "estado",
       render: (_: unknown, record: IViaje) => {
@@ -62,89 +161,34 @@ export default function TablaProgramacionViajes({
       },
     },
     {
-      title: "opciones",
+      title: "Opciones",
       dataIndex: "opciones",
       key: "opciones",
-      render: (_: unknown, record: IViaje) => {
-        return (
-          <>
-            <Image
-              src="/images/Edit.svg"
-              width="22"
-              height="22"
-              alt="Ver información"
-              onClick={() => updateViaje(record)}
-            />
-            <Image
-              src="/images/eliminar.svg"
-              width="22"
-              height="22"
-              alt="Ver información"
-              onClick={() => deleteViaje(record.ID)}
-            />
-          </>
-        );
-      },
+      render: (_: unknown, record: IViaje) => (
+        <>
+          <Image
+            src="/images/Edit.svg"
+            width="22"
+            height="22"
+            alt="Ver información"
+            onClick={() => updateViaje(record)}
+          />
+          <Image
+            src="/images/eliminar.svg"
+            width="22"
+            height="22"
+            alt="Ver información"
+            onClick={() => deleteViaje(record.ID)}
+          />
+        </>
+      ),
     },
   ];
-
-  const obtenerDatos = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, "ProgramacionViajes"));
-      const listaViaje: IViaje[] = [];
-
-      querySnapshot.forEach((doc) => {
-        listaViaje.push({
-          ID: doc.id,
-          idConductor: doc.data().idConductor,
-          fechaLlegada: doc.data().fechaLlegada,
-          fechaRecogida: doc.data().fechaRecogida,
-          idRuta: doc.data().idRuta,
-          idVehiculo: doc.data().idVehiculo,
-          nombreViaje: doc.data().nombreViaje,
-          estado: doc.data().estado,
-        });
-      });
-
-      setViajes(listaViaje); // Actualiza el estado con los datos obtenidos
-    } catch (error) {
-      console.error("Error al obtener los datos:", error);
-    }
-  };
-
-  const deleteViaje = async (id: string) => {
-    try {
-      await deleteDoc(doc(db, "ProgramacionViajes", id)); // Elimina el documento en Firebase
-      setViajes(viajes.filter((viaje) => viaje.ID !== id)); // Actualiza el estado sin el usuario eliminado
-      message.success(`Conductor eliminado con éxito`); // Mensaje de éxito
-      console.log(`Usuario con ID ${id} eliminado`);
-    } catch (error) {
-      console.error("Error al eliminar el usuario:", error);
-    }
-  };
-
-  const updateViaje = async (viaje: IViaje) => {
-    showModal();
-
-    setViaje(viaje);
-  };
-
-  useEffect(() => {
-    obtenerDatos();
-  }, []);
-
-  useEffect(() => {
-    console.log("use useEffect");
-    if (isReload) {
-      obtenerDatos();
-      setIsRelaod(false);
-      message.success(`Conductor agregado con éxito`);
-    }
-  }, [isReload]);
 
   return (
     <>
       <Table
+        scroll={{ x: 500 }}
         columns={columns}
         dataSource={viajes.map((viaje) => ({
           ...viaje,

@@ -1,12 +1,23 @@
-import { Button, Form, Input, Modal, Switch } from "antd";
-import React from "react";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Switch,
+  Upload,
+  UploadFile,
+} from "antd";
+import React, { useState } from "react";
 import {
   IFormCamion,
   IModalConductores,
   IsReload,
 } from "../../lib/interfaces/IConductores";
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../lib/firebase";
+import { UploadOutlined } from "@ant-design/icons";
+import { db, storage } from "../../lib/firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export default function ModalCoductores({
   setIsModalOpen,
@@ -15,16 +26,46 @@ export default function ModalCoductores({
 }: IModalConductores) {
   const [form] = Form.useForm();
 
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  const handleChange = ({ fileList }: any) => setFileList(fileList);
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
+  const subirFoto = async (file: File) => {
+    const storageRef = ref(storage, `conductores/${file.name}`);
+    try {
+      const snapshot = await uploadBytes(storageRef, file); //se sube la imagen a firestore
+      const url = await getDownloadURL(snapshot.ref); // obtiene la URL de la imagen subida
+      return url; // Retorna la URL para guardarla en Firestore
+    } catch (error) {
+      console.error("Error al subir la foto:", error);
+    }
+  };
   const onFinish = async (values: IFormCamion) => {
-    console.log("Finish ", values);
-    await agregarDato(values);
-    setIsModalOpen(false);
-    setIsRelaod(true);
-    form.resetFields();
+    if (fileList.length === 0) {
+      message.error("Por favor, selecciona una imagen para el vehículo.");
+      return;
+    }
+
+    try {
+      // Subir la foto y obtener la URL
+      const urlFoto = await subirFoto(fileList[0].originFileObj as File); // Usa el archivo original para subir
+      if (urlFoto) {
+        // Agregar el vehículo a Firestore junto con la URL de la foto
+        await agregarDato({ ...values, fotoDeConductor: urlFoto });
+      }
+
+      setIsModalOpen(false);
+      setIsRelaod(true);
+      form.resetFields();
+      setFileList([]); // Limpia la foto seleccionada
+      message.success("Vehículo agregado correctamente");
+    } catch (error) {
+      message.error("Error al agregar el vehículo");
+    }
   };
 
   async function agregarDato(conductor: IFormCamion) {
@@ -101,18 +142,7 @@ export default function ModalCoductores({
           >
             <Input placeholder="ingrese edad" />
           </Form.Item>
-          <Form.Item
-            label="fotoDeConductor"
-            name="fotoDeConductor"
-            rules={[
-              {
-                required: true,
-                message: "La fotoDeConductor es obligatorio",
-              },
-            ]}
-          >
-            <Input placeholder="ingrese fotoDeConductor" />
-          </Form.Item>
+
           <Form.Item
             label="licencia"
             name="licencia"
@@ -156,6 +186,22 @@ export default function ModalCoductores({
             validateTrigger="onBlur"
           >
             <Input placeholder="Ingrese su correo" />
+          </Form.Item>
+          <Form.Item
+            label="fotoDeConductor"
+            name="fotoDeConductor"
+            rules={[
+              { required: true, message: "El fotoDeConductor es obligatorio" },
+            ]}
+          >
+            <Upload
+              fileList={fileList}
+              beforeUpload={() => false} // Evita la carga automática
+              onChange={handleChange}
+              listType="picture"
+            >
+              <Button icon={<UploadOutlined />}>Seleccionar Imagen</Button>
+            </Upload>
           </Form.Item>
 
           <div

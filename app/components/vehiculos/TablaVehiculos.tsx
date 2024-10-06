@@ -133,12 +133,13 @@ export default function TablaVehiculos({ isReload, setIsRelaod }: IsReload) {
     if (isReload) {
       obtenerDatos();
       setIsRelaod(false);
-      message.success(`Conductor agregado con éxito`);
+      // message.success(`Conductor agregado con éxito`);
     }
   }, [isReload]);
   return (
     <>
       <Table
+        scroll={{ x: 500 }}
         columns={columns}
         dataSource={vehiculos.map((vehiculo) => ({
           ...vehiculo,
