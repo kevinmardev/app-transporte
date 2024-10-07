@@ -12,7 +12,14 @@ export default function MiLayout({ children }: { children: React.ReactNode }) {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const initialPage = localStorage.getItem("selectedPage") || "home";
+  const [initialPage, setInitialPage] = useState("home");
+
+  useEffect(() => {
+    const storedPage = localStorage.getItem("selectedPage");
+    if (storedPage) {
+      setInitialPage(storedPage);
+    }
+  }, []);
 
   const [current, setCurrent] = useState(initialPage);
 
