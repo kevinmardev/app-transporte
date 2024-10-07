@@ -41,7 +41,7 @@ export default function ModalViajes({
           idRuta: viaje.idRuta,
           idVehiculo: viaje.idVehiculo,
           nombreViaje: viaje.nombreViaje,
-          estado: viaje.estado,
+          // estado: viaje.estado,
         });
         console.log("Documento agregado con ID: ", docRef.id);
       } catch (e) {
@@ -72,7 +72,7 @@ export default function ModalViajes({
     const vehiculosSnapshot = await getDocs(q);
     const vehiculosList = vehiculosSnapshot.docs.map((doc) => ({
       id: doc.id,
-      placa: doc.data().placa,
+      tipoVehiculo: doc.data().tipoVehiculo,
     }));
     return vehiculosList;
   };
@@ -118,7 +118,7 @@ export default function ModalViajes({
       <Modal title="Asignar Viaje" open={isModalOpen} footer={null}>
         <Form form={form} name="control-ref" onFinish={onFinish}>
           <Form.Item
-            label="nombreViaje"
+            label="Nombre del viaje"
             name="nombreViaje"
             rules={[
               { required: true, message: "El nombre es obligatorio" },
@@ -131,7 +131,7 @@ export default function ModalViajes({
             <Input placeholder="Ingrese nombre" />
           </Form.Item>
           <Form.Item
-            label="fecha de Recogida"
+            label="Fecha de Recogida"
             name="fechaRecogida"
             rules={[
               {
@@ -166,7 +166,7 @@ export default function ModalViajes({
           </Form.Item> */}
 
           <Form.Item
-            label="fecha de Llegada"
+            label="Fecha de Llegada"
             name="fechaLlegada"
             rules={[
               {
@@ -178,7 +178,11 @@ export default function ModalViajes({
             <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
           </Form.Item>
 
-          <Form.Item label="Selecciona un Conductor" name="idConductor">
+          <Form.Item
+            label="Selecciona un Conductor"
+            name="idConductor"
+            rules={[{ required: true, message: "El Conductor es obligatorio" }]}
+          >
             <Select placeholder="Selecciona un conductor">
               {conductores.map((conductor) => (
                 <Option key={conductor.id} value={conductor.id}>
@@ -188,17 +192,27 @@ export default function ModalViajes({
             </Select>
           </Form.Item>
 
-          <Form.Item label="Selecciona una placa" name="idVehiculo">
+          <Form.Item
+            label="Selecciona una placa"
+            name="idVehiculo"
+            rules={[
+              { required: true, message: "El tipo de vehículo es obligatorio" },
+            ]}
+          >
             <Select placeholder="Selecciona un vehiculo">
               {vehiculos.map((vehiculo) => (
                 <Option key={vehiculo.id} value={vehiculo.id}>
-                  {vehiculo.placa}
+                  {vehiculo.tipoVehiculo}
                 </Option>
               ))}
             </Select>
           </Form.Item>
 
-          <Form.Item label="Selecciona una idRuta" name="idRuta">
+          <Form.Item
+            label="Selecciona una Ruta"
+            name="idRuta"
+            rules={[{ required: true, message: "La ruta es obligatoria" }]}
+          >
             <Select placeholder="Selecciona una ruta">
               {rutas.map((ruta) => (
                 <Option key={ruta.id} value={ruta.id}>
@@ -208,14 +222,14 @@ export default function ModalViajes({
             </Select>
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             label="Estado"
             name="estado"
             valuePropName="checked"
             rules={[{ required: true, message: "El estado es requerido" }]}
           >
             <Switch />
-          </Form.Item>
+          </Form.Item> */}
 
           <div
             style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}

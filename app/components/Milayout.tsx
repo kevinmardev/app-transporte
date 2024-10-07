@@ -39,7 +39,7 @@ export default function MiLayout({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <Layout>
+    <Layout style={{ minHeight: "100vh" }}>
       <Header style={{ display: "flex", alignItems: "center" }}>
         <div className="demo-logo" />
         <Menu
@@ -51,7 +51,7 @@ export default function MiLayout({ children }: { children: React.ReactNode }) {
           style={{ flex: 1, minWidth: 0 }}
         />
       </Header>
-      <Content style={{ padding: "0 48px" }}>
+      <Content style={{ padding: "0 48px", flexGrow: 1 }}>
         <Breadcrumb style={{ margin: "16px 0" }}>
           {/* <Breadcrumb.Item>Home</Breadcrumb.Item>
           <Breadcrumb.Item>List</Breadcrumb.Item>
@@ -68,9 +68,7 @@ export default function MiLayout({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </Content>
-      <Footer style={{ textAlign: "center" }}>
-        Ant Design ©{new Date().getFullYear()} Created by Ant UED
-      </Footer>
+      <Footer style={{ textAlign: "center" }}></Footer>
     </Layout>
   );
 }

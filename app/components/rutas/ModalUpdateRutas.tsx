@@ -1,6 +1,6 @@
 import { db } from "@/app/lib/firebase";
 import { IModalRuta, IRuta } from "@/app/lib/interfaces/IRuta";
-import { Button, Form, Input, Modal, Select, Switch } from "antd";
+import { Button, Form, Input, message, Modal, Select, Switch } from "antd";
 import { Option } from "antd/es/mentions";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -63,6 +63,7 @@ export default function ModalUpdateRutas({
     }
     setIsModalOpen(false);
     setIsRelaod(true);
+    message.success("Ruta actualizada correctamente");
   };
 
   useEffect(() => {
@@ -74,17 +75,17 @@ export default function ModalUpdateRutas({
 
   return (
     <>
-      <Modal title="Nueva Ruta" open={isModalOpen} footer={null}>
+      <Modal title="Actualizar Ruta" open={isModalOpen} footer={null}>
         <Form form={form} name="control-ref" onFinish={onFinish}>
           <Form.Item
             label="Nombre de la Ruta"
             name="nombreRuta"
             rules={[
               { required: true, message: "El nombre es obligatorio" },
-              {
-                pattern: /^[a-zA-Z\s]+$/,
-                message: "Solo se permiten letras y espacios",
-              },
+              // {
+              //   pattern: /^[a-zA-Z\s]+$/,
+              //   message: "Solo se permiten letras y espacios",
+              // },
             ]}
           >
             <Input placeholder="Ingrese nombre" />

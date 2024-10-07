@@ -1,7 +1,7 @@
 "use client";
 import { db } from "@/app/lib/firebase";
 import { IModalRuta, IRuta } from "@/app/lib/interfaces/IRuta";
-import { Button, Form, Input, Modal, Select, Switch } from "antd";
+import { Button, Form, Input, message, Modal, Select, Switch } from "antd";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
@@ -26,6 +26,7 @@ export default function ModalRuta({
     setIsModalOpen(false);
     setIsRelaod(true);
     form.resetFields();
+    message.success("Ruta agregada correctamente");
   };
 
   // Función para agregar datos a Firestore
@@ -98,10 +99,10 @@ export default function ModalRuta({
             name="nombreRuta"
             rules={[
               { required: true, message: "El nombre es obligatorio" },
-              {
-                pattern: /^[a-zA-Z\s]+$/,
-                message: "Solo se permiten letras y espacios",
-              },
+              // {
+              //   pattern: /^[a-zA-Z\s]+$/,
+              //   message: "Solo se permiten letras y espacios",
+              // },
             ]}
           >
             <Input placeholder="Ingrese nombre" />

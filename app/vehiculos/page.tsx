@@ -22,11 +22,12 @@ export default function pageVehiculos() {
         style={{ marginBottom: "20px" }}
       >
         <Col>
-          <Title level={2}>Vehiculos</Title>
+          <Title level={2}>Listado de Vehículos</Title>
         </Col>
         <Col>
+          <br />
           <Button onClick={showModal} type="primary">
-            Nuevo Vehiculo
+            Agregar vehículo
           </Button>
         </Col>
       </Row>

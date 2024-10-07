@@ -19,12 +19,12 @@ export default function TablaVehiculos({ isReload, setIsRelaod }: IsReload) {
 
   const columns = [
     {
-      title: "marca",
+      title: "Marca",
       dataIndex: "marca",
       key: "marca",
     },
     {
-      title: "modelo",
+      title: "Modelo",
       dataIndex: "modelo",
       key: "modelo",
     },
@@ -44,7 +44,7 @@ export default function TablaVehiculos({ isReload, setIsRelaod }: IsReload) {
       key: "tipoVehiculo",
     },
     {
-      title: "estado",
+      title: "Estado",
       dataIndex: "estado",
       key: "estado",
       render: (_: unknown, record: IVehiculo) => {
@@ -56,7 +56,7 @@ export default function TablaVehiculos({ isReload, setIsRelaod }: IsReload) {
       },
     },
     {
-      title: "opciones",
+      title: "Opciones",
       dataIndex: "opciones",
       key: "opciones",
       render: (_: unknown, record: IVehiculo) => {

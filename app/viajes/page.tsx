@@ -23,6 +23,7 @@ export default function pageViajes() {
           <Title level={2}>Viajes</Title>
         </Col>
         <Col>
+          <br />
           <Button onClick={showModal} type="primary">
             Asignar Viajes
           </Button>

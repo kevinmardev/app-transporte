@@ -1,7 +1,16 @@
 import { db } from "@/app/lib/firebase";
 import { UploadOutlined } from "@ant-design/icons";
 import { IModalVehiculo, IVehiculo } from "@/app/lib/interfaces/IVehiculo";
-import { Button, Form, Input, Modal, Select, Switch, Upload } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Select,
+  Switch,
+  Upload,
+} from "antd";
 import { doc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 
@@ -42,6 +51,7 @@ export default function ModalUpdateVehiculo({
     }
     setIsModalOpen(false);
     setIsRelaod(true);
+    message.success("Vehículo actualizado correctamente");
   };
 
   useEffect(() => {

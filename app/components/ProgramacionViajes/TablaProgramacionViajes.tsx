@@ -14,8 +14,23 @@ export default function TablaProgramacionViajes({
   const [viajes, setViajes] = useState<IViaje[]>([]);
   const [conductores, setConductores] = useState<any[]>([]);
   const [vehiculos, setVehiculos] = useState<any[]>([]);
+  const [rutas, setRutas] = useState<any[]>([]);
   const [isShow, setIsShow] = useState(false);
   const [viaje, setViaje] = useState<IViaje>();
+
+  //obtener nombre de rutas
+  const obntenerRutas = async () => {
+    try {
+      const rutasSnapshot = await getDocs(collection(db, "Rutas"));
+      const listaRutas = rutasSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        nombreRuta: doc.data().nombreRuta,
+      }));
+      setRutas(listaRutas);
+    } catch (error) {
+      console.log("Error al obtener las rutas", error);
+    }
+  };
 
   // Obtener todos los conductores al cargar el componente
   const obtenerConductores = async () => {
@@ -60,7 +75,7 @@ export default function TablaProgramacionViajes({
           idRuta: viajeData.idRuta,
           idVehiculo: viajeData.idVehiculo,
           nombreViaje: viajeData.nombreViaje,
-          estado: viajeData.estado,
+          // estado: viajeData.estado,
         });
       });
 
@@ -68,6 +83,12 @@ export default function TablaProgramacionViajes({
     } catch (error) {
       console.error("Error al obtener los datos:", error);
     }
+  };
+
+  //encontar el nombre de la ruta por medio del id de la ruta
+  const encontrarRua = (idRuta: string) => {
+    const ruta = rutas.find((ruta) => ruta.id === idRuta);
+    return ruta ? ruta.nombreRuta : "No se encontro la ruta";
   };
 
   // Encontrar el nombre del conductor basado en el idConductor
@@ -88,9 +109,9 @@ export default function TablaProgramacionViajes({
     try {
       await deleteDoc(doc(db, "ProgramacionViajes", id));
       setViajes(viajes.filter((viaje) => viaje.ID !== id));
-      message.success(`Conductor eliminado con éxito`);
+      message.success(`Viaje eliminado con éxito`);
     } catch (error) {
-      console.error("Error al eliminar el usuario:", error);
+      console.error("Error al eliminar el viaje:", error);
     }
   };
 
@@ -101,6 +122,7 @@ export default function TablaProgramacionViajes({
   };
 
   useEffect(() => {
+    obntenerRutas();
     obtenerVehiculos();
     obtenerConductores(); // Obtener conductores al cargar el componente
     obtenerDatos(); // Obtener viajes al cargar el componente
@@ -125,6 +147,7 @@ export default function TablaProgramacionViajes({
       title: "Nombre de la Ruta",
       dataIndex: "idRuta",
       key: "idRuta",
+      render: (idRuta: string) => encontrarRua(idRuta),
     },
     {
       title: "Fecha de Recogida",
@@ -148,18 +171,18 @@ export default function TablaProgramacionViajes({
       key: "idVehiculo",
       render: (idVehiculo: string) => encontrarVehiculo(idVehiculo),
     },
-    {
-      title: "Estado",
-      dataIndex: "estado",
-      key: "estado",
-      render: (_: unknown, record: IViaje) => {
-        if (record.estado) {
-          return <Tag color="#87d068">Activo</Tag>;
-        } else {
-          return <Tag color="#FF0000">Inactivo</Tag>;
-        }
-      },
-    },
+    // {
+    //   title: "Estado",
+    //   dataIndex: "estado",
+    //   key: "estado",
+    //   render: (_: unknown, record: IViaje) => {
+    //     if (record.estado) {
+    //       return <Tag color="#87d068">Activo</Tag>;
+    //     } else {
+    //       return <Tag color="#FF0000">Inactivo</Tag>;
+    //     }
+    //   },
+    // },
     {
       title: "Opciones",
       dataIndex: "opciones",

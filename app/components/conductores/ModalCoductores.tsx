@@ -62,9 +62,9 @@ export default function ModalCoductores({
       setIsRelaod(true);
       form.resetFields();
       setFileList([]); // Limpia la foto seleccionada
-      message.success("Vehículo agregado correctamente");
+      message.success("Conductor agregado correctamente");
     } catch (error) {
-      message.error("Error al agregar el vehículo");
+      message.error("Error al agregar el conductor");
     }
   };
 
@@ -107,9 +107,9 @@ export default function ModalCoductores({
             <Input placeholder="ingrese nombre" />
           </Form.Item>
           <Form.Item
-            label="direccion"
+            label="Dirección"
             name="direccion"
-            rules={[{ required: true, message: "La direccion es obligatorio" }]}
+            rules={[{ required: true, message: "La dirección es obligatoria" }]}
           >
             <Input placeholder="ingrese direccion" />
           </Form.Item>
@@ -130,10 +130,10 @@ export default function ModalCoductores({
           </Form.Item>
 
           <Form.Item
-            label="edad"
+            label="Edad"
             name="edad"
             rules={[
-              { required: true, message: "La edad es obligatorio" },
+              { required: true, message: "La edad es obligatoria" },
               {
                 pattern: /^[0-9]+$/,
                 message: "Solo se permiten números",
@@ -144,14 +144,14 @@ export default function ModalCoductores({
           </Form.Item>
 
           <Form.Item
-            label="licencia"
+            label="Licencia"
             name="licencia"
-            rules={[{ required: true, message: "La licencia es obligatorio" }]}
+            rules={[{ required: true, message: "La licencia es obligatoria" }]}
           >
             <Input placeholder="ingrese licencia" />
           </Form.Item>
           <Form.Item
-            label="estado"
+            label="Estado"
             name="estado"
             valuePropName="checked"
             rules={[{ required: true, message: "El estado es requerido" }]}
@@ -188,10 +188,13 @@ export default function ModalCoductores({
             <Input placeholder="Ingrese su correo" />
           </Form.Item>
           <Form.Item
-            label="fotoDeConductor"
+            label="Foto del Conductor"
             name="fotoDeConductor"
             rules={[
-              { required: true, message: "El fotoDeConductor es obligatorio" },
+              {
+                required: true,
+                message: "La foto del conductor es obligatoria",
+              },
             ]}
           >
             <Upload

@@ -20,11 +20,12 @@ export default function pageRutas() {
         style={{ marginBottom: "20px" }}
       >
         <Col>
-          <Title level={2}>Rutas</Title>
+          <Title level={2}>Lista de Rutas</Title>
         </Col>
         <Col>
+          <br />
           <Button onClick={showModal} type="primary">
-            Nueva Ruta
+            Agregar Ruta
           </Button>
         </Col>
       </Row>

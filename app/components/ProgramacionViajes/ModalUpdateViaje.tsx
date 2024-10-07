@@ -34,16 +34,22 @@ export default function ModalUpdateViaje({
     if (viaje) {
       try {
         // Crear referencia al documento del usuario
+        const fechaLlegada = moment(values.fechaLlegada).format(
+          "YYYY-MM-DD HH:mm:ss"
+        );
+        const fechaRecogida = moment(values.fechaRecogida).format(
+          "YYYY-MM-DD HH:mm:ss"
+        );
         const usuarioRef = doc(db, "ProgramacionViajes", viaje.ID);
         // Actualizar el documento con los nuevos valores
         await updateDoc(usuarioRef, {
           nombreViaje: values.nombreViaje,
-          fechaRecogida: values.fechaRecogida,
-          fechaLlegada: values.fechaLlegada,
+          fechaRecogida: fechaRecogida,
+          fechaLlegada: fechaLlegada,
           idConductor: values.idConductor,
           idVehiculo: values.idVehiculo,
           idRuta: values.idRuta,
-          estado: values.estado,
+          // estado: values.estado,
         });
         console.log("Usuario actualizado correctamente.");
       } catch (error) {
@@ -76,7 +82,7 @@ export default function ModalUpdateViaje({
     const vehiculosSnapshot = await getDocs(q);
     const vehiculosList = vehiculosSnapshot.docs.map((doc) => ({
       id: doc.id,
-      placa: doc.data().placa,
+      tipoVehiculo: doc.data().tipoVehiculo,
     }));
     return vehiculosList;
   };
@@ -120,13 +126,19 @@ export default function ModalUpdateViaje({
   useEffect(() => {
     if (isModalOpen && viaje) {
       // Establecer valores en el formulario
-      const fecha = moment(viaje.fechaLlegada, "YYYY-MM-DD HH:mm:ss");
+      const fechaLlegada = moment(viaje.fechaLlegada, "YYYY-MM-DD HH:mm:ss");
+      const fechaRecogida = moment(viaje.fechaRecogida, "YYYY-MM-DD HH:mm:ss");
       form.setFieldsValue(viaje);
       form.setFieldValue(
         "fechaLlegada",
         moment(viaje.fechaLlegada, "YYYY-MM-DD HH:mm:ss")
       );
-      console.log(fecha.format("YYYY-MM-DD HH:mm:ss"));
+      form.setFieldValue(
+        "fechaRecogida",
+        moment(viaje.fechaRecogida, "YYYY-MM-DD HH:mm:ss")
+      );
+
+      // console.log(fecha.format("YYYY-MM-DD HH:mm:ss"));
     }
   }, [isModalOpen, viaje, form]);
 
@@ -147,15 +159,20 @@ export default function ModalUpdateViaje({
           >
             <Input placeholder="Ingrese nombre" />
           </Form.Item>
+
           <Form.Item
-            label="fechaRecogida"
+            label="fecha de Recogida"
             name="fechaRecogida"
             rules={[
-              { required: true, message: "El fechaRecogida es obligatorio" },
+              {
+                required: true,
+                message: "Por favor selecciona una fecha y hora",
+              },
             ]}
           >
-            <Input placeholder="Ingrese fechaRecogida" />
+            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
           </Form.Item>
+
           <Form.Item
             label="fecha de Llegada"
             name="fechaLlegada"
@@ -168,6 +185,7 @@ export default function ModalUpdateViaje({
           >
             <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
           </Form.Item>
+
           <Form.Item label="Selecciona un Conductor" name="idConductor">
             <Select placeholder="Selecciona un conductor">
               {conductores.map((conductor) => (
@@ -178,11 +196,11 @@ export default function ModalUpdateViaje({
             </Select>
           </Form.Item>
 
-          <Form.Item label="Selecciona una placa" name="idVehiculo">
+          <Form.Item label="Selecciona una vehículo" name="idVehiculo">
             <Select placeholder="Selecciona un vehiculo">
               {vehiculos.map((vehiculo) => (
                 <Select.Option key={vehiculo.id} value={vehiculo.id}>
-                  {vehiculo.placa}
+                  {vehiculo.tipoVehiculo}
                 </Select.Option>
               ))}
             </Select>
@@ -198,14 +216,14 @@ export default function ModalUpdateViaje({
             </Select>
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             label="Estado"
             name="estado"
             valuePropName="checked"
             rules={[{ required: true, message: "El estado es requerido" }]}
           >
             <Switch />
-          </Form.Item>
+          </Form.Item> */}
 
           <div
             style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}

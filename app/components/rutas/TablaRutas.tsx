@@ -20,27 +20,27 @@ export default function TablaRutas({ isReload, setIsRelaod }: IsReload) {
 
   const columns = [
     {
-      title: "nombre",
+      title: "Nombre",
       dataIndex: "nombreRuta",
       key: "nombreRuta",
     },
     {
-      title: "tipo de Viaje",
+      title: "Tipo de Viaje",
       dataIndex: "tipoViaje",
       key: "tipoViaje",
     },
     {
-      title: "origen de Ruta",
+      title: "Origen de Ruta",
       dataIndex: "origenRuta",
       key: "origenRuta",
     },
     {
-      title: "destino de Ruta",
+      title: "Destino de Ruta",
       dataIndex: "destinoRuta",
       key: "destinoRuta",
     },
     {
-      title: "estado",
+      title: "Estado",
       dataIndex: "estado",
       key: "estado",
       render: (_: unknown, record: IRuta) => {
@@ -52,7 +52,7 @@ export default function TablaRutas({ isReload, setIsRelaod }: IsReload) {
       },
     },
     {
-      title: "opciones",
+      title: "Opciones",
       dataIndex: "opciones",
       key: "opciones",
       render: (_: unknown, record: IRuta) => {
@@ -128,7 +128,7 @@ export default function TablaRutas({ isReload, setIsRelaod }: IsReload) {
     if (isReload) {
       obtenerDatos();
       setIsRelaod(false);
-      message.success(`Conductor agregado con éxito`);
+      // message.success(`Conductor agregado con éxito`);
     }
   }, [isReload, setIsRelaod]);
 

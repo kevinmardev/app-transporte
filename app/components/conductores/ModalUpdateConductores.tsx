@@ -1,4 +1,13 @@
-import { Button, Form, Input, Modal, Switch, Upload, UploadFile } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Switch,
+  Upload,
+  UploadFile,
+} from "antd";
 import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../lib/firebase";
@@ -48,6 +57,7 @@ export default function ModalUpdateCoductores({
     }
     setIsModalOpen(false);
     setIsRelaod(true);
+    message.success("Conductor actualizado correctamente");
   };
 
   useEffect(() => {
@@ -64,11 +74,9 @@ export default function ModalUpdateCoductores({
     }
   }, [isModalOpen, conductor, form]);
 
-  const editarConductor = async () => {};
-
   return (
     <>
-      <Modal title="Nuevo Camión" open={isModalOpen} footer={null}>
+      <Modal title="Actualizar Conductor" open={isModalOpen} footer={null}>
         <Form form={form} name="control-ref" onFinish={onFinish}>
           <Form.Item
             label="Nombre"
@@ -84,9 +92,9 @@ export default function ModalUpdateCoductores({
             <Input placeholder="ingrese nombre" />
           </Form.Item>
           <Form.Item
-            label="direccion"
+            label="Dirección"
             name="direccion"
-            rules={[{ required: true, message: "La direccion es obligatorio" }]}
+            rules={[{ required: true, message: "La direccion es obligatoria" }]}
           >
             <Input placeholder="ingrese direccion" />
           </Form.Item>
@@ -107,10 +115,10 @@ export default function ModalUpdateCoductores({
           </Form.Item>
 
           <Form.Item
-            label="edad"
+            label="Edad"
             name="edad"
             rules={[
-              { required: true, message: "La edad es obligatorio" },
+              { required: true, message: "La edad es obligatoria" },
               {
                 pattern: /^[0-9]+$/,
                 message: "Solo se permiten números",
@@ -121,14 +129,14 @@ export default function ModalUpdateCoductores({
           </Form.Item>
 
           <Form.Item
-            label="licencia"
+            label="Licencia"
             name="licencia"
-            rules={[{ required: true, message: "La licencia es obligatorio" }]}
+            rules={[{ required: true, message: "La licencia es obligatoria" }]}
           >
             <Input placeholder="ingrese licencia" />
           </Form.Item>
           <Form.Item
-            label="estado"
+            label="Estado"
             name="estado"
             valuePropName="checked"
             rules={[{ required: true, message: "El estado es requerido" }]}
@@ -168,7 +176,10 @@ export default function ModalUpdateCoductores({
             label="fotoDeConductor"
             name="fotoDeConductor"
             rules={[
-              { required: true, message: "El fotoDeConductor es obligatorio" },
+              {
+                required: true,
+                message: "La Foto del conductor es obligatorio",
+              },
             ]}
           >
             <Upload

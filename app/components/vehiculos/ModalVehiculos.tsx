@@ -103,14 +103,14 @@ export default function ModalVehiculos({
             <Input placeholder="ingrese marca" />
           </Form.Item>
           <Form.Item
-            label="modelo"
+            label="Modelo"
             name="modelo"
-            rules={[{ required: true, message: "La modelo es obligatorio" }]}
+            rules={[{ required: true, message: "El modelo es obligatorio" }]}
           >
             <Input placeholder="ingrese modelo" />
           </Form.Item>
           <Form.Item
-            label="year"
+            label="Año"
             name="year"
             rules={[
               { required: true, message: "El año es obligatorio" },
@@ -126,14 +126,14 @@ export default function ModalVehiculos({
           </Form.Item>
 
           <Form.Item
-            label="placa"
+            label="Placa"
             name="placa"
             rules={[{ required: true, message: "La placa es obligatorio" }]}
           >
             <Input placeholder="ingrese placa" />
           </Form.Item>
           <Form.Item
-            label="capacidad"
+            label="Capacidad"
             name="capacidad"
             rules={[
               {
@@ -166,7 +166,7 @@ export default function ModalVehiculos({
           </Form.Item>
 
           <Form.Item
-            label="estado"
+            label="Estado"
             name="estado"
             valuePropName="checked"
             rules={[{ required: true, message: "El estado es requerido" }]}
@@ -175,16 +175,20 @@ export default function ModalVehiculos({
           </Form.Item>
 
           <Form.Item
-            label="fotoVehiculo"
+            label="Foto del vehículo"
             name="fotoVehiculo"
             rules={[
-              { required: true, message: "El fotoVehiculo es obligatorio" },
+              {
+                required: true,
+                message: "La foto del vehículo es obligatoria",
+              },
             ]}
           >
             <Upload
               fileList={fileList}
               beforeUpload={() => false} // Evita la carga automática
               onChange={handleChange}
+              listType="picture"
             >
               <Button icon={<UploadOutlined />}>Seleccionar Imagen</Button>
             </Upload>

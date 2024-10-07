@@ -28,7 +28,7 @@ export default function TablaConductores({ isReload, setIsRelaod }: IsReload) {
 
   const columns = [
     {
-      title: "nombre",
+      title: "Nombre",
       dataIndex: "nombre",
       key: "nombre",
     },
@@ -38,17 +38,17 @@ export default function TablaConductores({ isReload, setIsRelaod }: IsReload) {
       key: "DUI",
     },
     {
-      title: "direccion",
+      title: "Direccion",
       dataIndex: "direccion",
       key: "direccion",
     },
     {
-      title: "edad",
+      title: "Edad",
       dataIndex: "edad",
       key: "edad",
     },
     {
-      title: "estado",
+      title: "Estado",
       dataIndex: "estado",
       key: "estado",
       render: (_: unknown, record: IFormCamion) => {
@@ -60,7 +60,7 @@ export default function TablaConductores({ isReload, setIsRelaod }: IsReload) {
       },
     },
     {
-      title: "opciones",
+      title: "Opciones",
       dataIndex: "opciones",
       key: "opciones",
       render: (_: unknown, record: IFormCamion) => {
@@ -138,7 +138,6 @@ export default function TablaConductores({ isReload, setIsRelaod }: IsReload) {
     if (isReload) {
       obtenerDatos();
       setIsRelaod(false);
-      message.success(`Conductor agregado con éxito`);
     }
   }, [isReload]);
   return (

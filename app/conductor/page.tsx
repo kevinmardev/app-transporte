@@ -23,8 +23,10 @@ export default function pageConductores() {
           <Title level={2}>Conductores</Title>
         </Col>
         <Col>
+          <br />
+
           <Button onClick={showModal} type="primary">
-            Nuevo Conductor
+            Agregar Conductor
           </Button>
         </Col>
       </Row>
