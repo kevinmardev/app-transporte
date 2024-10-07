@@ -1,5 +1,8 @@
 import { db } from "@/app/lib/firebase";
+import { IFormCamion } from "@/app/lib/interfaces/IConductores";
 import { IModalViaje, IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
+import { IRuta } from "@/app/lib/interfaces/IRuta";
+import { IVehiculo } from "@/app/lib/interfaces/IVehiculo";
 import { Button, DatePicker, Form, Input, Modal, Select } from "antd";
 
 import {
@@ -20,9 +23,9 @@ export default function ModalUpdateViaje({
   viaje,
 }: IModalViaje) {
   const [form] = Form.useForm();
-  const [conductores, setConductores] = useState<any[]>([]);
-  const [vehiculos, setVehiculos] = useState<any[]>([]);
-  const [rutas, setRutas] = useState<any[]>([]);
+  const [conductores, setConductores] = useState<IFormCamion[]>([]);
+  const [vehiculos, setVehiculos] = useState<IVehiculo[]>([]);
+  const [rutas, setRutas] = useState<IRuta[]>([]);
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -125,8 +128,8 @@ export default function ModalUpdateViaje({
   useEffect(() => {
     if (isModalOpen && viaje) {
       // Establecer valores en el formulario
-      const fechaLlegada = moment(viaje.fechaLlegada, "YYYY-MM-DD HH:mm:ss");
-      const fechaRecogida = moment(viaje.fechaRecogida, "YYYY-MM-DD HH:mm:ss");
+      // const fechaLlegada = moment(viaje.fechaLlegada, "YYYY-MM-DD HH:mm:ss");
+      // const fechaRecogida = moment(viaje.fechaRecogida, "YYYY-MM-DD HH:mm:ss");
       form.setFieldsValue(viaje);
       form.setFieldValue(
         "fechaLlegada",
@@ -188,7 +191,7 @@ export default function ModalUpdateViaje({
           <Form.Item label="Selecciona un Conductor" name="idConductor">
             <Select placeholder="Selecciona un conductor">
               {conductores.map((conductor) => (
-                <Select.Option key={conductor.id} value={conductor.id}>
+                <Select.Option key={conductor.ID} value={conductor.ID}>
                   {conductor.nombre}
                 </Select.Option>
               ))}
@@ -198,7 +201,7 @@ export default function ModalUpdateViaje({
           <Form.Item label="Selecciona una vehículo" name="idVehiculo">
             <Select placeholder="Selecciona un vehiculo">
               {vehiculos.map((vehiculo) => (
-                <Select.Option key={vehiculo.id} value={vehiculo.id}>
+                <Select.Option key={vehiculo.ID} value={vehiculo.ID}>
                   {vehiculo.tipoVehiculo}
                 </Select.Option>
               ))}
@@ -208,7 +211,7 @@ export default function ModalUpdateViaje({
           <Form.Item label="Selecciona una idRuta" name="idRuta">
             <Select placeholder="Selecciona una ruta">
               {rutas.map((ruta) => (
-                <Select.Option key={ruta.id} value={ruta.id}>
+                <Select.Option key={ruta.ID} value={ruta.ID}>
                   {ruta.nombreRuta}
                 </Select.Option>
               ))}

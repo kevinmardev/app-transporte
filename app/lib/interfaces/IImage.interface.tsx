@@ -1,7 +1,7 @@
-import { UploadFile } from "antd";
+// import { UploadFile } from "antd";
 
-export interface IMagen {
-  fileList: UploadFile[];
-  setFileList: (fileList: any) => void;
-  handleChange: ({ fileList }: any) => { setFileList: (fileList: any) => void };
-}
+// export interface IMagen {
+//   fileList: UploadFile[];
+//   setFileList: (fileList: any) => void;
+//   handleChange: ({ fileList }: any) => { setFileList: (fileList: any) => void };
+// }

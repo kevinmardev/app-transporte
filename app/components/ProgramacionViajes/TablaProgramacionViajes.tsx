@@ -1,20 +1,22 @@
 import { db } from "@/app/lib/firebase";
-import { IsReload } from "@/app/lib/interfaces/IConductores";
+import { IFormCamion, IsReload } from "@/app/lib/interfaces/IConductores";
 import { IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
 import { message, Table } from "antd";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ModalUpdateViaje from "./ModalUpdateViaje";
+import { IVehiculo } from "@/app/lib/interfaces/IVehiculo";
+import { IRuta } from "@/app/lib/interfaces/IRuta";
 
 export default function TablaProgramacionViajes({
   isReload,
   setIsRelaod,
 }: IsReload) {
   const [viajes, setViajes] = useState<IViaje[]>([]);
-  const [conductores, setConductores] = useState<any[]>([]);
-  const [vehiculos, setVehiculos] = useState<any[]>([]);
-  const [rutas, setRutas] = useState<any[]>([]);
+  const [conductores, setConductores] = useState<IFormCamion[] | any[]>([]);
+  const [vehiculos, setVehiculos] = useState<IVehiculo[] | any[]>([]);
+  const [rutas, setRutas] = useState<IRuta[] | any[]>([]);
   const [isShow, setIsShow] = useState(false);
   const [viaje, setViaje] = useState<IViaje>();
 

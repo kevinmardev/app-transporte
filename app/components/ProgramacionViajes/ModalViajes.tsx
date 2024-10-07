@@ -1,5 +1,7 @@
 import { db } from "@/app/lib/firebase";
+import { IFormCamion } from "@/app/lib/interfaces/IConductores";
 import { IModalViaje, IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
+import { IRuta } from "@/app/lib/interfaces/IRuta";
 import { Button, DatePicker, Form, Input, Modal, Select } from "antd";
 import { Option } from "antd/es/mentions";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
@@ -11,9 +13,9 @@ export default function ModalViajes({
   setIsRelaod,
 }: IModalViaje) {
   const [form] = Form.useForm();
-  const [conductores, setConductores] = useState<any[]>([]);
-  const [vehiculos, setVehiculos] = useState<any[]>([]);
-  const [rutas, setRutas] = useState<any[]>([]);
+  const [conductores, setConductores] = useState<IFormCamion[]>([]);
+  const [vehiculos, setVehiculos] = useState<IViaje[]>([]);
+  const [rutas, setRutas] = useState<IRuta[]>([]);
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -184,7 +186,7 @@ export default function ModalViajes({
           >
             <Select placeholder="Selecciona un conductor">
               {conductores.map((conductor) => (
-                <Option key={conductor.id} value={conductor.id}>
+                <Option key={conductor.ID} value={conductor.ID}>
                   {conductor.nombre}
                 </Option>
               ))}
@@ -200,8 +202,8 @@ export default function ModalViajes({
           >
             <Select placeholder="Selecciona un vehiculo">
               {vehiculos.map((vehiculo) => (
-                <Option key={vehiculo.id} value={vehiculo.id}>
-                  {vehiculo.tipoVehiculo}
+                <Option key={vehiculo.ID} value={vehiculo.ID}>
+                  {vehiculo.idVehiculo}
                 </Option>
               ))}
             </Select>
@@ -214,7 +216,7 @@ export default function ModalViajes({
           >
             <Select placeholder="Selecciona una ruta">
               {rutas.map((ruta) => (
-                <Option key={ruta.id} value={ruta.id}>
+                <Option key={ruta.ID} value={ruta.ID}>
                   {ruta.nombreRuta}
                 </Option>
               ))}
