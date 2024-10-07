@@ -3,7 +3,7 @@ import React from "react";
 import SubidaImagen from "../components/Imges/SubidaImagen";
 import ImageUploadForm from "../components/Imges/ComponenteImagen";
 
-export default function page() {
+export default function Page() {
   return (
     <div>
       <SubidaImagen />

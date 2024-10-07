@@ -6,7 +6,7 @@ import ModalVehiculos from "../components/vehiculos/ModalVehiculos";
 import { Button, Col, Row, Typography } from "antd";
 const { Title } = Typography;
 
-export default function pageVehiculos() {
+export default function PageVehiculos() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReload, setIsRelaod] = useState(false);
 

@@ -1,16 +1,7 @@
 import { storage } from "@/app/lib/firebase";
-import {
-  collection,
-  doc,
-  getDocs,
-  getFirestore,
-  query,
-  setDoc,
-  updateDoc,
-  where,
-} from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useState, FormEvent } from "react";
+import { doc, getFirestore, updateDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { FormEvent, useState } from "react";
 
 export default function SubidaImagen() {
   const [image, setImage] = useState<File | null>(null); // Estado para almacenar el archivo

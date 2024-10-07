@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <StyledComponentsRegistry>
-          <MiLayout children={children}></MiLayout>
+          <MiLayout>{children}</MiLayout>
         </StyledComponentsRegistry>
       </body>
     </html>

@@ -1,11 +1,10 @@
-import { message, Table, Tag } from "antd";
-import Image from "next/image";
-import { IVehiculo } from "../../lib/interfaces/IVehiculo";
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { db } from "@/app/lib/firebase";
-import { useEffect, useState } from "react";
-import ModalVehiculos from "./ModalVehiculos";
 import { IsReload } from "@/app/lib/interfaces/IConductores";
+import { message, Table, Tag } from "antd";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { IVehiculo } from "../../lib/interfaces/IVehiculo";
 import ModalUpdateVehiculo from "./ModalUpdateVehiculo";
 
 export default function TablaVehiculos({ isReload, setIsRelaod }: IsReload) {

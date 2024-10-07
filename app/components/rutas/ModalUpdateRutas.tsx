@@ -1,7 +1,6 @@
 import { db } from "@/app/lib/firebase";
 import { IModalRuta, IRuta } from "@/app/lib/interfaces/IRuta";
-import { Button, Form, Input, message, Modal, Select, Switch } from "antd";
-import { Option } from "antd/es/mentions";
+import { Button, Form, Input, message, Modal, Switch } from "antd";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 

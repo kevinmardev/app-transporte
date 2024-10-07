@@ -5,7 +5,7 @@ import ModalRuta from "../components/rutas/ModalRuta";
 import { Button, Col, Row, Typography } from "antd";
 const { Title } = Typography;
 
-export default function pageRutas() {
+export default function PageRutas() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReload, setIsRelaod] = useState(false);
   const showModal = () => {

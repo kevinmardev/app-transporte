@@ -1,7 +1,6 @@
 import { db } from "@/app/lib/firebase";
 import { IModalViaje, IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
-import { IVehiculo } from "@/app/lib/interfaces/IVehiculo";
-import { Button, DatePicker, Form, Input, Modal, Select, Switch } from "antd";
+import { Button, DatePicker, Form, Input, Modal, Select } from "antd";
 import { Option } from "antd/es/mentions";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";

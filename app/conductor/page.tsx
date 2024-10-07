@@ -5,7 +5,7 @@ import ModalCoductores from "../components/conductores/ModalCoductores";
 import TablaConductores from "../components/conductores/TablaConductores";
 const { Title } = Typography;
 
-export default function pageConductores() {
+export default function PageConductores() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReload, setIsRelaod] = useState(false);
   const showModal = () => {

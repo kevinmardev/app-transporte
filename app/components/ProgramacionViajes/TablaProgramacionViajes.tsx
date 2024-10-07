@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
 import { db } from "@/app/lib/firebase";
-import { IModalViaje, IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
-import { message, Table, Tag } from "antd";
+import { IsReload } from "@/app/lib/interfaces/IConductores";
+import { IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
+import { message, Table } from "antd";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import ModalUpdateViaje from "./ModalUpdateViaje";
-import { IsReload } from "@/app/lib/interfaces/IConductores";
 
 export default function TablaProgramacionViajes({
   isReload,
