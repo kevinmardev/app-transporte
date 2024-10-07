@@ -22,7 +22,7 @@ export default function ModalViajes({
     setIsModalOpen(false);
   };
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values) => {
     console.log("Finish ", values.fechaLlegada.format("YYYY-MM-DD HH:mm:ss"));
     values.fechaLlegada = values.fechaLlegada.format("YYYY-MM-DD HH:mm:ss");
     values.fechaRecogida = values.fechaRecogida.format("YYYY-MM-DD HH:mm:ss");

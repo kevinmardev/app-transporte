@@ -2,7 +2,7 @@
 import { db } from "@/app/lib/firebase";
 import { IModalRuta, IRuta } from "@/app/lib/interfaces/IRuta";
 import { Button, Form, Input, message, Modal, Switch } from "antd";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 
 export default function ModalRuta({
   setIsModalOpen,
