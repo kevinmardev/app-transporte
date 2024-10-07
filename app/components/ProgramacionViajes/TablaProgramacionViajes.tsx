@@ -1,20 +1,13 @@
 import { db } from "@/app/lib/firebase";
-import {
-  IConduntorModal,
-  IFormCamion,
-  IsReload,
-} from "@/app/lib/interfaces/IConductores";
+import { IConduntorModal, IsReload } from "@/app/lib/interfaces/IConductores";
 import { IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
+import { IRutaModalUpdate } from "@/app/lib/interfaces/IRuta";
+import { IVehiculoModalUpdate } from "@/app/lib/interfaces/IVehiculo";
 import { message, Table } from "antd";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ModalUpdateViaje from "./ModalUpdateViaje";
-import {
-  IVehiculo,
-  IVehiculoModalUpdate,
-} from "@/app/lib/interfaces/IVehiculo";
-import { IRuta, IRutaModalUpdate } from "@/app/lib/interfaces/IRuta";
 
 export default function TablaProgramacionViajes({
   isReload,

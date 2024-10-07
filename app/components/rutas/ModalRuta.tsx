@@ -42,27 +42,6 @@ export default function ModalRuta({
     }
   }
 
-  // Función para obtener los conductores de Firestore
-  const getConductores = async () => {
-    const conductoresCollection = collection(db, "Conductores");
-    const conductoresSnapshot = await getDocs(conductoresCollection);
-    const conductoresList = conductoresSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      nombre: doc.data().nombre,
-    }));
-    return conductoresList;
-  };
-
-  const getVehiculos = async () => {
-    const vehiculosCollection = collection(db, "Camiones");
-    const vehiculosSnapshot = await getDocs(vehiculosCollection);
-    const vehiculosList = vehiculosSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      placa: doc.data().placa,
-    }));
-    return vehiculosList;
-  };
-
   return (
     <>
       <Modal title="Nueva Ruta" open={isModalOpen} footer={null}>

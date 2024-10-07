@@ -11,7 +11,6 @@ import {
 } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { url } from "inspector";
 import { useEffect, useState } from "react";
 import { db, storage } from "../../lib/firebase";
 import {

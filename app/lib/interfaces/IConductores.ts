@@ -1,5 +1,3 @@
-import { UploadFile } from "antd";
-import { Interface } from "readline";
 
 export interface IFormCamion{
     nombre: string;

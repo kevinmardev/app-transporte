@@ -1,14 +1,8 @@
 import { db } from "@/app/lib/firebase";
-import {
-  IConduntorModal,
-  IFormCamion,
-} from "@/app/lib/interfaces/IConductores";
+import { IConduntorModal } from "@/app/lib/interfaces/IConductores";
 import { IModalViaje, IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
-import { IRuta, IRutaModalUpdate } from "@/app/lib/interfaces/IRuta";
-import {
-  IVehiculo,
-  IVehiculoModalUpdate,
-} from "@/app/lib/interfaces/IVehiculo";
+import { IRutaModalUpdate } from "@/app/lib/interfaces/IRuta";
+import { IVehiculoModalUpdate } from "@/app/lib/interfaces/IVehiculo";
 import { Button, DatePicker, Form, Input, Modal, Select } from "antd";
 import { Option } from "antd/es/mentions";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
