@@ -102,19 +102,19 @@ export default function ModalUpdateViaje({
   useEffect(() => {
     console.log("Modal montado");
     const fetchConductores = async () => {
-      const conductoresList: any[] = await getConductores();
+      const conductoresList: IFormCamion | any[] = await getConductores();
       setConductores(conductoresList);
       console.log("conductores");
     };
 
     const fetchVehiculos = async () => {
-      const vehiculosList: any[] = await getVehiculos();
+      const vehiculosList: IVehiculo | any[] = await getVehiculos();
       setVehiculos(vehiculosList);
       console.log("Vehiculos");
     };
 
     const fetchRutas = async () => {
-      const rutasList: any[] = await getRutas();
+      const rutasList: IRuta | any[] = await getRutas();
       setRutas(rutasList);
     };
 
