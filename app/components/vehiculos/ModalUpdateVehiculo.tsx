@@ -1,4 +1,4 @@
-import { db } from "@/app/lib/firebase";
+import { db, storage } from "@/app/lib/firebase";
 import { UploadOutlined } from "@ant-design/icons";
 import { IModalVehiculo, IVehiculo } from "@/app/lib/interfaces/IVehiculo";
 import {
@@ -10,9 +10,11 @@ import {
   Select,
   Switch,
   Upload,
+  UploadFile,
 } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export default function ModalUpdateVehiculo({
   setIsModalOpen,
@@ -21,37 +23,57 @@ export default function ModalUpdateVehiculo({
   vehiculo,
 }: IModalVehiculo) {
   const [form] = Form.useForm();
-  const [fileList, setFileList] = useState<any[]>([]);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const handleChange = ({ fileList }: any) => setFileList(fileList);
+  const handleChange = ({ fileList }) => setFileList(fileList);
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
+  const subirFoto = async (file: File) => {
+    const storageRef = ref(storage, `conductores/${file.name}`);
+    try {
+      const snapshot = await uploadBytes(storageRef, file); //se sube la imagen a firestore
+      const url = await getDownloadURL(snapshot.ref); // obtiene la URL de la imagen subida
+      return url; // Retorna la URL para guardarla en Firestore
+    } catch (error) {
+      console.error("Error al subir la foto:", error);
+    }
+  };
+
   const onFinish = async (values: IVehiculo) => {
     console.log("Finish ", values);
     if (vehiculo) {
+      let urlFoto: unknown = vehiculo.fotoVehiculo; // Mantener la URL existente si no se actualiza la foto
+
+      // Verificar si hay una nueva imagen para subir
+      if (fileList.length > 0 && fileList[0].originFileObj) {
+        // Subir la nueva imagen a Firebase Storage y obtener la URL
+        urlFoto = await subirFoto(fileList[0].originFileObj as File);
+      }
+
       try {
         const usuarioRef = doc(db, "Camiones", vehiculo.ID);
         await updateDoc(usuarioRef, {
           marca: values.marca,
           capacidad: values.capacidad,
-          fotoVehiculo: values.fotoVehiculo,
+          fotoVehiculo: urlFoto,
           modelo: values.modelo,
           placa: values.placa,
           tipoVehiculo: values.tipoVehiculo,
           estado: values.estado,
           year: values.year,
         });
-        console.log("Usuario actualizado correctamente.");
+
+        message.success("Vehículo actualizado correctamente");
       } catch (error) {
         console.error("Error al actualizar el usuario:", error);
       }
     }
+    console.log("Usuario actualizado correctamente.");
     setIsModalOpen(false);
     setIsRelaod(true);
-    message.success("Vehículo actualizado correctamente");
   };
 
   useEffect(() => {
@@ -62,7 +84,10 @@ export default function ModalUpdateVehiculo({
       if (vehiculo.fotoVehiculo) {
         setFileList([
           {
-            url: vehiculo.fotoVehiculo, // URL de la imagen existente
+            uid: "-1", // Un identificador único para este archivo
+            name: "", // Nombre del archivo (puedes usar el nombre de la propiedad o el archivo)
+            status: "done", // Estado del archivo (ya subido)
+            url: vehiculo.fotoVehiculo, // La URL de la foto ya subida
           },
         ]);
       }
@@ -152,7 +177,10 @@ export default function ModalUpdateVehiculo({
           label="Foto del Vehículo"
           name="fotoVehiculo"
           rules={[
-            { required: true, message: "La foto del vehículo es obligatoria" },
+            {
+              required: true,
+              message: "La foto del vehículo es obligatoria",
+            },
           ]}
         >
           <Upload

@@ -1,22 +1,29 @@
 import { db } from "@/app/lib/firebase";
-import { IFormCamion, IsReload } from "@/app/lib/interfaces/IConductores";
+import {
+  IConduntorModal,
+  IFormCamion,
+  IsReload,
+} from "@/app/lib/interfaces/IConductores";
 import { IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
 import { message, Table } from "antd";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ModalUpdateViaje from "./ModalUpdateViaje";
-import { IVehiculo } from "@/app/lib/interfaces/IVehiculo";
-import { IRuta } from "@/app/lib/interfaces/IRuta";
+import {
+  IVehiculo,
+  IVehiculoModalUpdate,
+} from "@/app/lib/interfaces/IVehiculo";
+import { IRuta, IRutaModalUpdate } from "@/app/lib/interfaces/IRuta";
 
 export default function TablaProgramacionViajes({
   isReload,
   setIsRelaod,
 }: IsReload) {
   const [viajes, setViajes] = useState<IViaje[]>([]);
-  const [conductores, setConductores] = useState<IFormCamion[] | any[]>([]);
-  const [vehiculos, setVehiculos] = useState<IVehiculo[] | any[]>([]);
-  const [rutas, setRutas] = useState<IRuta[] | any[]>([]);
+  const [conductores, setConductores] = useState<IConduntorModal[]>([]);
+  const [vehiculos, setVehiculos] = useState<IVehiculoModalUpdate[]>([]);
+  const [rutas, setRutas] = useState<IRutaModalUpdate[]>([]);
   const [isShow, setIsShow] = useState(false);
   const [viaje, setViaje] = useState<IViaje>();
 
@@ -24,11 +31,11 @@ export default function TablaProgramacionViajes({
   const obntenerRutas = async () => {
     try {
       const rutasSnapshot = await getDocs(collection(db, "Rutas"));
-      const listaRutas = rutasSnapshot.docs.map((doc) => ({
-        id: doc.id,
+      const listaRutas: unknown = rutasSnapshot.docs.map((doc) => ({
+        ID: doc.id,
         nombreRuta: doc.data().nombreRuta,
       }));
-      setRutas(listaRutas);
+      setRutas(listaRutas as IRutaModalUpdate[]);
     } catch (error) {
       console.log("Error al obtener las rutas", error);
     }
@@ -38,11 +45,11 @@ export default function TablaProgramacionViajes({
   const obtenerConductores = async () => {
     try {
       const conductoresSnapshot = await getDocs(collection(db, "Conductores"));
-      const listaConductores = conductoresSnapshot.docs.map((doc) => ({
-        id: doc.id,
+      const listaConductores: unknown = conductoresSnapshot.docs.map((doc) => ({
+        ID: doc.id,
         nombre: doc.data().nombre,
       }));
-      setConductores(listaConductores); // Guardar todos los conductores en el estado
+      setConductores(listaConductores as IConduntorModal[]); // Guardar todos los conductores en el estado
     } catch (error) {
       console.error("Error al obtener los conductores:", error);
     }
@@ -51,11 +58,11 @@ export default function TablaProgramacionViajes({
   const obtenerVehiculos = async () => {
     try {
       const vehiculosSnapshot = await getDocs(collection(db, "Camiones"));
-      const listaVehiculos = vehiculosSnapshot.docs.map((doc) => ({
-        id: doc.id,
+      const listaVehiculos: unknown = vehiculosSnapshot.docs.map((doc) => ({
+        ID: doc.id,
         tipoVehiculo: doc.data().tipoVehiculo,
       }));
-      setVehiculos(listaVehiculos);
+      setVehiculos(listaVehiculos as IVehiculoModalUpdate[]);
     } catch (error) {
       console.log("error al cargar", error);
     }
@@ -89,20 +96,20 @@ export default function TablaProgramacionViajes({
 
   //encontar el nombre de la ruta por medio del id de la ruta
   const encontrarRua = (idRuta: string) => {
-    const ruta = rutas.find((ruta) => ruta.id === idRuta);
+    const ruta = rutas.find((ruta) => ruta.ID === idRuta);
     return ruta ? ruta.nombreRuta : "No se encontro la ruta";
   };
 
   // Encontrar el nombre del conductor basado en el idConductor
   const encontrarConductor = (idConductor: string) => {
     const conductor = conductores.find(
-      (conductor) => conductor.id === idConductor
+      (conductor) => conductor.ID === idConductor
     );
     return conductor ? conductor.nombre : "Conductor no encontrado";
   };
 
   const encontrarVehiculo = (idVehiculo: string) => {
-    const vehiculo = vehiculos.find((vehiculo) => vehiculo.id === idVehiculo);
+    const vehiculo = vehiculos.find((vehiculo) => vehiculo.ID === idVehiculo);
     return vehiculo ? vehiculo.tipoVehiculo : "vehiiculo no encontrado";
   };
 

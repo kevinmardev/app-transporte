@@ -1,8 +1,8 @@
 import { db } from "@/app/lib/firebase";
 import { IModalRuta, IRuta } from "@/app/lib/interfaces/IRuta";
 import { Button, Form, Input, message, Modal, Switch } from "antd";
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { doc, updateDoc } from "firebase/firestore";
+import { useEffect } from "react";
 
 export default function ModalUpdateRutas({
   setIsModalOpen,
@@ -11,32 +11,9 @@ export default function ModalUpdateRutas({
   ruta,
 }: IModalRuta) {
   const [form] = Form.useForm();
-  const [conductores, setConductores] = useState<any[]>([]);
-  const [vehiculos, setVehiculos] = useState<any[]>([]);
 
   const handleCancel = () => {
     setIsModalOpen(false);
-  };
-
-  // Función para obtener los conductores de Firestore
-  const getConductores = async () => {
-    const conductoresCollection = collection(db, "Conductores");
-    const conductoresSnapshot = await getDocs(conductoresCollection);
-    const conductoresList = conductoresSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      nombre: doc.data().nombre,
-    }));
-    return conductoresList;
-  };
-
-  const getVehiculos = async () => {
-    const vehiculosCollection = collection(db, "Camiones");
-    const vehiculosSnapshot = await getDocs(vehiculosCollection);
-    const vehiculosList = vehiculosSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      placa: doc.data().placa,
-    }));
-    return vehiculosList;
   };
 
   const onFinish = async (values: IRuta) => {
@@ -51,8 +28,6 @@ export default function ModalUpdateRutas({
           tipoViaje: values.tipoViaje,
           origenRuta: values.origenRuta,
           destinoRuta: values.destinoRuta,
-          // idConductor: values.idConductor,
-          // idVehiculo: values.idVehiculo,
           estado: values.estado,
         });
         console.log("Usuario actualizado correctamente.");
@@ -124,26 +99,6 @@ export default function ModalUpdateRutas({
           >
             <Input placeholder="Ingrese el destino de la ruta" />
           </Form.Item>
-
-          {/* <Form.Item label="Selecciona un Conductor" name="idConductor">
-            <Select placeholder="Selecciona un conductor">
-              {conductores.map((conductor) => (
-                <Option key={conductor.id} value={conductor.id}>
-                  {conductor.nombre}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item label="Selecciona una placa" name="idVehiculo">
-            <Select placeholder="Selecciona un vehiculo">
-              {vehiculos.map((vehiculo) => (
-                <Option key={vehiculo.id} value={vehiculo.id}>
-                  {vehiculo.placa}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item> */}
 
           <Form.Item
             label="Estado"

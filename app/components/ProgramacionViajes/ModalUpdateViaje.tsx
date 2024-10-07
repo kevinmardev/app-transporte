@@ -1,8 +1,14 @@
 import { db } from "@/app/lib/firebase";
-import { IFormCamion } from "@/app/lib/interfaces/IConductores";
+import {
+  IConduntorModal,
+  IFormCamion,
+} from "@/app/lib/interfaces/IConductores";
 import { IModalViaje, IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
-import { IRuta } from "@/app/lib/interfaces/IRuta";
-import { IVehiculo } from "@/app/lib/interfaces/IVehiculo";
+import { IRuta, IRutaModalUpdate } from "@/app/lib/interfaces/IRuta";
+import {
+  IVehiculo,
+  IVehiculoModalUpdate,
+} from "@/app/lib/interfaces/IVehiculo";
 import { Button, DatePicker, Form, Input, Modal, Select } from "antd";
 
 import {
@@ -23,9 +29,9 @@ export default function ModalUpdateViaje({
   viaje,
 }: IModalViaje) {
   const [form] = Form.useForm();
-  const [conductores, setConductores] = useState<IFormCamion[]>([]);
-  const [vehiculos, setVehiculos] = useState<IVehiculo[]>([]);
-  const [rutas, setRutas] = useState<IRuta[]>([]);
+  const [conductores, setConductores] = useState<IConduntorModal[]>([]);
+  const [vehiculos, setVehiculos] = useState<IVehiculoModalUpdate[]>([]);
+  const [rutas, setRutas] = useState<IRutaModalUpdate[]>([]);
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -35,7 +41,6 @@ export default function ModalUpdateViaje({
     console.log("Finish ", values);
     if (viaje) {
       try {
-        // Crear referencia al documento del usuario
         const fechaLlegada = moment(values.fechaLlegada).format(
           "YYYY-MM-DD HH:mm:ss"
         );
@@ -43,7 +48,6 @@ export default function ModalUpdateViaje({
           "YYYY-MM-DD HH:mm:ss"
         );
         const usuarioRef = doc(db, "ProgramacionViajes", viaje.ID);
-        // Actualizar el documento con los nuevos valores
         await updateDoc(usuarioRef, {
           nombreViaje: values.nombreViaje,
           fechaRecogida: fechaRecogida,
@@ -51,7 +55,6 @@ export default function ModalUpdateViaje({
           idConductor: values.idConductor,
           idVehiculo: values.idVehiculo,
           idRuta: values.idRuta,
-          // estado: values.estado,
         });
         console.log("Usuario actualizado correctamente.");
       } catch (error) {
@@ -65,13 +68,11 @@ export default function ModalUpdateViaje({
   // Función para obtener solo los conductores activos
   const getConductores = async () => {
     const conductoresCollection = collection(db, "Conductores");
-
-    // Crear una consulta para obtener conductores con estado activo
     const q = query(conductoresCollection, where("estado", "==", true));
-
     const conductoresSnapshot = await getDocs(q);
+
     const conductoresList = conductoresSnapshot.docs.map((doc) => ({
-      id: doc.id,
+      ID: doc.id,
       nombre: doc.data().nombre,
     }));
 
@@ -82,54 +83,68 @@ export default function ModalUpdateViaje({
     const vehiculosCollection = collection(db, "Camiones");
     const q = query(vehiculosCollection, where("estado", "==", true));
     const vehiculosSnapshot = await getDocs(q);
+
     const vehiculosList = vehiculosSnapshot.docs.map((doc) => ({
-      id: doc.id,
+      ID: doc.id,
       tipoVehiculo: doc.data().tipoVehiculo,
     }));
+
     return vehiculosList;
   };
 
   const getRutas = async () => {
     const rutasCollection = collection(db, "Rutas");
     const rutasSnapshot = await getDocs(rutasCollection);
+
     const rutasList = rutasSnapshot.docs.map((doc) => ({
-      id: doc.id,
+      ID: doc.id,
       nombreRuta: doc.data().nombreRuta,
     }));
+
     return rutasList;
   };
 
   useEffect(() => {
     console.log("Modal montado");
+
     const fetchConductores = async () => {
-      const conductoresList: any[] = await getConductores();
-      setConductores(conductoresList);
+      const conductoresList: unknown = await getConductores();
+      if (Array.isArray(conductoresList)) {
+        setConductores(conductoresList as IConduntorModal[]);
+        console.log(conductores);
+      } else {
+        console.error("La respuesta no es un array");
+      }
       console.log("conductores");
     };
 
     const fetchVehiculos = async () => {
-      const vehiculosList: any[] = await getVehiculos();
-      setVehiculos(vehiculosList);
+      const vehiculosList: unknown = await getVehiculos();
+      if (Array.isArray(vehiculosList)) {
+        setVehiculos(vehiculosList as IVehiculoModalUpdate[]);
+      } else {
+        console.error("La respuesta no es un array");
+      }
       console.log("Vehiculos");
     };
 
     const fetchRutas = async () => {
-      const rutasList: any[] = await getRutas();
-      setRutas(rutasList);
+      const rutasList: unknown = await getRutas();
+      if (Array.isArray(rutasList)) {
+        setRutas(rutasList as IRutaModalUpdate[]);
+        console.log(rutasList);
+      } else {
+        console.error("La respuesta no es un array");
+      }
     };
 
     fetchVehiculos();
-
     fetchRutas();
-
     fetchConductores();
   }, []);
 
   useEffect(() => {
     if (isModalOpen && viaje) {
-      // Establecer valores en el formulario
-      // const fechaLlegada = moment(viaje.fechaLlegada, "YYYY-MM-DD HH:mm:ss");
-      // const fechaRecogida = moment(viaje.fechaRecogida, "YYYY-MM-DD HH:mm:ss");
       form.setFieldsValue(viaje);
       form.setFieldValue(
         "fechaLlegada",
@@ -139,8 +154,6 @@ export default function ModalUpdateViaje({
         "fechaRecogida",
         moment(viaje.fechaRecogida, "YYYY-MM-DD HH:mm:ss")
       );
-
-      // console.log(fecha.format("YYYY-MM-DD HH:mm:ss"));
     }
   }, [isModalOpen, viaje, form]);
 
@@ -198,8 +211,8 @@ export default function ModalUpdateViaje({
             </Select>
           </Form.Item>
 
-          <Form.Item label="Selecciona una vehículo" name="idVehiculo">
-            <Select placeholder="Selecciona un vehiculo">
+          <Form.Item label="Selecciona un vehículo" name="idVehiculo">
+            <Select placeholder="Selecciona un vehículo">
               {vehiculos.map((vehiculo) => (
                 <Select.Option key={vehiculo.ID} value={vehiculo.ID}>
                   {vehiculo.tipoVehiculo}
@@ -208,7 +221,7 @@ export default function ModalUpdateViaje({
             </Select>
           </Form.Item>
 
-          <Form.Item label="Selecciona una idRuta" name="idRuta">
+          <Form.Item label="Selecciona una ruta" name="idRuta">
             <Select placeholder="Selecciona una ruta">
               {rutas.map((ruta) => (
                 <Select.Option key={ruta.ID} value={ruta.ID}>
@@ -217,15 +230,6 @@ export default function ModalUpdateViaje({
               ))}
             </Select>
           </Form.Item>
-
-          {/* <Form.Item
-            label="Estado"
-            name="estado"
-            valuePropName="checked"
-            rules={[{ required: true, message: "El estado es requerido" }]}
-          >
-            <Switch />
-          </Form.Item> */}
 
           <div
             style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}

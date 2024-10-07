@@ -10,6 +10,11 @@ export interface IVehiculo {
   estado:boolean
 }
 
+export interface IVehiculoModalUpdate{
+  ID:string
+  tipoVehiculo:string
+}
+
 export interface IModalVehiculo {
   vehiculo?: IVehiculo;
   isModalOpen: boolean;

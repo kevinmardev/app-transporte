@@ -1,11 +1,8 @@
 "use client";
 import { db } from "@/app/lib/firebase";
 import { IModalRuta, IRuta } from "@/app/lib/interfaces/IRuta";
-import { Button, Form, Input, message, Modal, Select, Switch } from "antd";
+import { Button, Form, Input, message, Modal, Switch } from "antd";
 import { addDoc, collection, getDocs } from "firebase/firestore";
-import { useEffect, useState } from "react";
-
-const { Option } = Select; // Asegúrate de usar correctamente el componente Option
 
 export default function ModalRuta({
   setIsModalOpen,
@@ -13,8 +10,6 @@ export default function ModalRuta({
   setIsRelaod,
 }: IModalRuta) {
   const [form] = Form.useForm();
-  const [conductores, setConductores] = useState<any[]>([]);
-  const [vehiculos, setVehiculos] = useState<any[]>([]);
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -38,8 +33,6 @@ export default function ModalRuta({
           tipoViaje: ruta.tipoViaje,
           origenRuta: ruta.origenRuta,
           destinoRuta: ruta.destinoRuta,
-          // idConductor: ruta.idConductor,
-          // idVehiculo: ruta.idVehiculo,
           estado: ruta.estado,
         });
         console.log("Documento agregado con ID: ", docRef.id);
@@ -70,26 +63,6 @@ export default function ModalRuta({
     return vehiculosList;
   };
 
-  // Llama a fetchConductores dentro de useEffect
-  useEffect(() => {
-    console.log("Modal montado");
-    const fetchConductores = async () => {
-      const conductoresList: any[] = await getConductores();
-      setConductores(conductoresList);
-      console.log("conductores");
-    };
-
-    const fetchVehiculos = async () => {
-      const vehiculosList: any[] = await getVehiculos();
-      setVehiculos(vehiculosList);
-      console.log("Vehiculos");
-    };
-
-    fetchVehiculos();
-
-    fetchConductores();
-  }, []); // El arreglo vacío asegura que esto solo se ejecute una vez cuando el componente se monta
-
   return (
     <>
       <Modal title="Nueva Ruta" open={isModalOpen} footer={null}>
@@ -97,13 +70,7 @@ export default function ModalRuta({
           <Form.Item
             label="Nombre de la Ruta"
             name="nombreRuta"
-            rules={[
-              { required: true, message: "El nombre es obligatorio" },
-              // {
-              //   pattern: /^[a-zA-Z\s]+$/,
-              //   message: "Solo se permiten letras y espacios",
-              // },
-            ]}
+            rules={[{ required: true, message: "El nombre es obligatorio" }]}
           >
             <Input placeholder="Ingrese nombre" />
           </Form.Item>
@@ -142,26 +109,6 @@ export default function ModalRuta({
           >
             <Input placeholder="Ingrese el destino de la ruta" />
           </Form.Item>
-
-          {/* <Form.Item label="Selecciona un Conductor" name="idConductor">
-            <Select placeholder="Selecciona un conductor">
-              {conductores.map((conductor) => (
-                <Option key={conductor.id} value={conductor.id}>
-                  {conductor.nombre}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item label="Selecciona una placa" name="idVehiculo">
-            <Select placeholder="Selecciona un vehiculo">
-              {vehiculos.map((vehiculo) => (
-                <Option key={vehiculo.id} value={vehiculo.id}>
-                  {vehiculo.placa}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item> */}
 
           <Form.Item
             label="Estado"

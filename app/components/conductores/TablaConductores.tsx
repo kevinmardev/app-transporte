@@ -1,20 +1,10 @@
 "use client";
 import { message, Table, Tag } from "antd";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import {
-  IFormCamion,
-  IModalConductores,
-  IsReload,
-} from "../../lib/interfaces/IConductores";
 import { db } from "../../lib/firebase";
+import { IFormCamion, IsReload } from "../../lib/interfaces/IConductores";
 import ModalUpdateCoductores from "./ModalUpdateConductores";
 
 export default function TablaConductores({ isReload, setIsRelaod }: IsReload) {

@@ -1,7 +1,14 @@
 import { db } from "@/app/lib/firebase";
-import { IFormCamion } from "@/app/lib/interfaces/IConductores";
+import {
+  IConduntorModal,
+  IFormCamion,
+} from "@/app/lib/interfaces/IConductores";
 import { IModalViaje, IViaje } from "@/app/lib/interfaces/IProgramacionViajes";
-import { IRuta } from "@/app/lib/interfaces/IRuta";
+import { IRuta, IRutaModalUpdate } from "@/app/lib/interfaces/IRuta";
+import {
+  IVehiculo,
+  IVehiculoModalUpdate,
+} from "@/app/lib/interfaces/IVehiculo";
 import { Button, DatePicker, Form, Input, Modal, Select } from "antd";
 import { Option } from "antd/es/mentions";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
@@ -13,9 +20,9 @@ export default function ModalViajes({
   setIsRelaod,
 }: IModalViaje) {
   const [form] = Form.useForm();
-  const [conductores, setConductores] = useState<IFormCamion[]>([]);
-  const [vehiculos, setVehiculos] = useState<IViaje[]>([]);
-  const [rutas, setRutas] = useState<IRuta[]>([]);
+  const [conductores, setConductores] = useState<IConduntorModal[]>([]);
+  const [vehiculos, setVehiculos] = useState<IVehiculoModalUpdate[]>([]);
+  const [rutas, setRutas] = useState<IRutaModalUpdate[]>([]);
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -91,20 +98,20 @@ export default function ModalViajes({
   useEffect(() => {
     console.log("Modal montado");
     const fetchConductores = async () => {
-      const conductoresList: any[] = await getConductores();
-      setConductores(conductoresList);
+      const conductoresList: unknown = await getConductores();
+      setConductores(conductoresList as IConduntorModal[]);
       console.log("conductores");
     };
 
     const fetchVehiculos = async () => {
-      const vehiculosList: any[] = await getVehiculos();
-      setVehiculos(vehiculosList);
+      const vehiculosList: unknown = await getVehiculos();
+      setVehiculos(vehiculosList as IVehiculoModalUpdate[]);
       console.log("Vehiculos");
     };
 
     const fetchRutas = async () => {
-      const rutasList: any[] = await getRutas();
-      setRutas(rutasList);
+      const rutasList: unknown = await getRutas();
+      setRutas(rutasList as IRutaModalUpdate[]);
     };
 
     fetchVehiculos();
@@ -203,7 +210,7 @@ export default function ModalViajes({
             <Select placeholder="Selecciona un vehiculo">
               {vehiculos.map((vehiculo) => (
                 <Option key={vehiculo.ID} value={vehiculo.ID}>
-                  {vehiculo.idVehiculo}
+                  {vehiculo.tipoVehiculo}
                 </Option>
               ))}
             </Select>

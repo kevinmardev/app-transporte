@@ -24,7 +24,7 @@ export default function ModalVehiculos({
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const handleChange = ({ fileList }: any) => setFileList(fileList);
+  const handleChange = ({ fileList }) => setFileList(fileList);
 
   const subirFoto = async (file: File) => {
     const storageRef = ref(storage, `camiones/${file.name}`);
@@ -62,6 +62,7 @@ export default function ModalVehiculos({
       message.success("Vehículo agregado correctamente");
     } catch (error) {
       message.error("Error al agregar el vehículo");
+      console.log("Error", error);
     }
   };
 

@@ -1,3 +1,4 @@
+import { UploadFile } from "antd";
 import { Interface } from "readline";
 
 export interface IFormCamion{
@@ -12,6 +13,12 @@ export interface IFormCamion{
     telefono:string
     correo:string
 
+}
+
+
+export interface IConduntorModal{
+  ID:string
+  nombre:string
 }
 
 export interface IModalConductores {

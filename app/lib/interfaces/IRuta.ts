@@ -10,6 +10,12 @@ export interface IRuta {
     tipoViaje: string;
   }
 
+  export interface IRutaModalUpdate{
+    ID:string
+    nombreRuta: string;
+    
+  }
+
 
   export interface IModalRuta {
     ruta?: IRuta;

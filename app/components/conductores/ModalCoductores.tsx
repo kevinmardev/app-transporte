@@ -1,3 +1,4 @@
+import { UploadOutlined } from "@ant-design/icons";
 import {
   Button,
   Form,
@@ -8,16 +9,14 @@ import {
   Upload,
   UploadFile,
 } from "antd";
-import React, { useState } from "react";
+import { addDoc, collection } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useState } from "react";
+import { db, storage } from "../../lib/firebase";
 import {
   IFormCamion,
   IModalConductores,
-  IsReload,
 } from "../../lib/interfaces/IConductores";
-import { addDoc, collection } from "firebase/firestore";
-import { UploadOutlined } from "@ant-design/icons";
-import { db, storage } from "../../lib/firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export default function ModalCoductores({
   setIsModalOpen,
@@ -28,7 +27,7 @@ export default function ModalCoductores({
 
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const handleChange = ({ fileList }: any) => setFileList(fileList);
+  const handleChange = ({ fileList }) => setFileList(fileList);
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -65,6 +64,7 @@ export default function ModalCoductores({
       message.success("Conductor agregado correctamente");
     } catch (error) {
       message.error("Error al agregar el conductor");
+      console.log("error ", error);
     }
   };
 

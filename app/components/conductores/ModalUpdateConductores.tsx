@@ -1,3 +1,4 @@
+import { UploadOutlined } from "@ant-design/icons";
 import {
   Button,
   Form,
@@ -9,9 +10,10 @@ import {
   UploadFile,
 } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { url } from "inspector";
 import { useEffect, useState } from "react";
-import { db } from "../../lib/firebase";
-import { UploadOutlined } from "@ant-design/icons";
+import { db, storage } from "../../lib/firebase";
 import {
   IFormCamion,
   IModalConductores,
@@ -25,16 +27,36 @@ export default function ModalUpdateCoductores({
 }: IModalConductores) {
   const [form] = Form.useForm();
 
-  const [fileList, setFileList] = useState<any[]>([]);
-  const handleChange = ({ fileList }: any) => setFileList(fileList);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const handleChange = ({ fileList }: { fileList: UploadFile[] }) => {
+    setFileList(fileList); // Aquí actualizamos la lista de archivos
+  };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
+  const subirFoto = async (file: File) => {
+    const storageRef = ref(storage, `conductores/${file.name}`);
+    try {
+      const snapshot = await uploadBytes(storageRef, file); //se sube la imagen a firestore
+      const url = await getDownloadURL(snapshot.ref); // obtiene la URL de la imagen subida
+      return url; // Retorna la URL para guardarla en Firestore
+    } catch (error) {
+      console.error("Error al subir la foto:", error);
+    }
+  };
+
   const onFinish = async (values: IFormCamion) => {
     console.log("Finish ", values);
     if (conductor) {
+      let urlFoto: unknown = conductor.fotoDeConductor; // Mantener la URL existente si no se actualiza la foto
+
+      // Verificar si hay una nueva imagen para subir
+      if (fileList.length > 0 && fileList[0].originFileObj) {
+        // Subir la nueva imagen a Firebase Storage y obtener la URL
+        urlFoto = await subirFoto(fileList[0].originFileObj as File);
+      }
       try {
         // Crear referencia al documento del usuario
         const usuarioRef = doc(db, "Conductores", conductor.ID);
@@ -45,7 +67,7 @@ export default function ModalUpdateCoductores({
           edad: values.edad,
           DUI: values.DUI,
           licencia: values.licencia,
-          fotoDeConductor: values.fotoDeConductor,
+          fotoDeConductor: urlFoto,
           telefono: values.telefono,
           estado: values.estado,
           correo: values.correo,
@@ -62,14 +84,22 @@ export default function ModalUpdateCoductores({
 
   useEffect(() => {
     if (isModalOpen && conductor) {
-      form.setFieldsValue(conductor); // Establecer valores en el formulario
-      //   form.setFieldsValue({ nombresa: conductor.nombre });
+      // Establecer los valores del formulario con los datos del conductor
+      form.setFieldsValue(conductor);
+
+      // Si el conductor ya tiene una foto almacenada, se configura el `fileList`
       if (conductor.fotoDeConductor) {
         setFileList([
           {
-            url: conductor.fotoDeConductor, // URL de la imagen existente
+            uid: "-1", // Un identificador único para este archivo
+            name: "", // Nombre del archivo (puedes usar el nombre de la propiedad o el archivo)
+            status: "done", // Estado del archivo (ya subido)
+            url: conductor.fotoDeConductor, // La URL de la foto ya subida
           },
         ]);
+      } else {
+        // Si no hay foto previa, limpiar el `fileList`
+        setFileList([]);
       }
     }
   }, [isModalOpen, conductor, form]);
